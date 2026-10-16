@@ -5,7 +5,7 @@
 Are overdose deaths going down where we live and dance? This page puts official death counts for the
 United States, California, Nevada, San Francisco, Alameda County and Washoe County next to every reported
 overdose, cluster, health alert, drug-checking finding and new substance we can find in the Bay Area,
-California and Nevada. Every report links its source.
+California and Nevada. Every report links its primary source: the agency or organization that produced the information.
 
 Harm-reduction information, not medical advice. If someone won't wake up or isn't breathing normally,
 call 911 and give Narcan.
@@ -22,8 +22,10 @@ call 911 and give Narcan.
 
 ## Updating
 
-Every Monday a scheduled Claude task searches news, health departments, medical examiners, the DEA and CDC,
-and drug-checking programs, then:
+Every Monday a scheduled job (Claude) refreshes the official counts and looks for new reports. It cites trusted
+primary sources only (health departments, medical examiners, the CDC and DEA, the Federal Register, attorneys
+general, police and courts, drug-checking programs); news coverage can point to a report but is never the citation.
+Reports added in the past week get a yellow ring on the map. The job runs:
 
 ```bash
 python3 tools/update_trend.py          # refresh official counts (standard library only)

@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Overdose Watch</title>
-<meta name="description" content="Are overdose deaths going down in the Bay Area, California and Nevada? Official death counts, plus reported overdoses, alerts and new drugs, each with its source. Updated weekly.">
+<meta name="description" content="Are overdose deaths going down in the Bay Area, California and Nevada? Official death counts, plus overdoses, alerts and new drugs from primary sources. Updated weekly.">
 <meta property="og:title" content="Overdose Watch">
-<meta property="og:description" content="Official overdose death counts for the Bay Area, California and Nevada, plus reported overdoses, alerts and new drugs, each with its source. Updated weekly.">
+<meta property="og:description" content="Official overdose death counts for the Bay Area, California and Nevada, plus overdoses, alerts and new drugs from primary sources. Updated weekly.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kat-titter.github.io/overdose-watch/">
 <meta name="theme-color" content="#c8102e">
@@ -14,204 +14,201 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@700;800&family=Public+Sans:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: one column; the official trend first, then the reports (filters, map + timeline, list), then how it works.
-   Red = opioid and "worse", yellow = benzodiazepine and the thing to notice, slate = animal sedative. */
+/* A news-and-science page: hairline rules and whitespace instead of boxes, one style per role, aligned columns.
+   Red = opioid and "worse"; yellow = benzodiazepine, the thing to notice, and what is new this week; slate = animal sedative. */
 :root{
-  --bg:#ffffff; --ink:#1a1517; --body:#3d3739; --mute:#5e5759; --rule:#e4dfe0; --well:#f6f3f3; --card:#ffffff; --area:#e9e2e3;
-  --red:#c8102e; --redt:#fbe6e9; --yel:#d9b100; --yeld:#9a7b00; --yelt:#fff2a8; --slate:#5c6b82; --slatet:#e3e8ef; --gray:#8f8486;
-  --land:#e9e2e3; --landline:#c4b9bb; --water:#ffffff; --focus:#c8102e; --shadow:rgba(26,21,23,.16);
+  --bg:#ffffff; --ink:#161214; --body:#3b3537; --mute:#625a5c; --rule:#e7e2e3; --rule2:#cbc3c5; --card:#ffffff; --area:#ece6e7;
+  --red:#c8102e; --yel:#d9b100; --yeld:#9a7b00; --yelt:#fff2a8; --slate:#5c6b82; --gray:#8f8486;
+  --land:#ece6e7; --landline:#c9bfc1; --water:#ffffff; --focus:#c8102e; --shadow:rgba(22,18,20,.14);
   --display:'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif; --text:'Public Sans','Helvetica Neue',Arial,sans-serif; --mono:'DM Mono',Menlo,Consolas,monospace;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#141011; --ink:#f6f1f1; --body:#d9d1d2; --mute:#aaa1a3; --rule:#342b2d; --well:#1e1819; --card:#1e1819; --area:#2e2527;
-  --red:#ff5a6e; --redt:#3a1a20; --yel:#f2cf3a; --yeld:#a88a10; --yelt:#3b3420; --slate:#9db0cc; --slatet:#252c38; --gray:#a8a0a2;
-  --land:#2b2325; --landline:#4d4143; --water:#141011; --focus:#ff5a6e; --shadow:rgba(0,0,0,.5); color-scheme:dark}}
+  --bg:#121011; --ink:#f6f1f1; --body:#d9d1d2; --mute:#a9a0a2; --rule:#2f282a; --rule2:#4a4144; --card:#1c1718; --area:#2c2426;
+  --red:#ff5a6e; --yel:#f2cf3a; --yeld:#a88a10; --yelt:#3b3420; --slate:#9db0cc; --gray:#a8a0a2;
+  --land:#2a2224; --landline:#4b4042; --water:#121011; --focus:#ff5a6e; --shadow:rgba(0,0,0,.5); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#141011; --ink:#f6f1f1; --body:#d9d1d2; --mute:#aaa1a3; --rule:#342b2d; --well:#1e1819; --card:#1e1819; --area:#2e2527;
-  --red:#ff5a6e; --redt:#3a1a20; --yel:#f2cf3a; --yeld:#a88a10; --yelt:#3b3420; --slate:#9db0cc; --slatet:#252c38; --gray:#a8a0a2;
-  --land:#2b2325; --landline:#4d4143; --water:#141011; --focus:#ff5a6e; --shadow:rgba(0,0,0,.5); color-scheme:dark}
+  --bg:#121011; --ink:#f6f1f1; --body:#d9d1d2; --mute:#a9a0a2; --rule:#2f282a; --rule2:#4a4144; --card:#1c1718; --area:#2c2426;
+  --red:#ff5a6e; --yel:#f2cf3a; --yeld:#a88a10; --yelt:#3b3420; --slate:#9db0cc; --gray:#a8a0a2;
+  --land:#2a2224; --landline:#4b4042; --water:#121011; --focus:#ff5a6e; --shadow:rgba(0,0,0,.5); color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--body);font:16px/1.5 var(--text)}
-a{color:var(--red)}
-.wrap{max-width:1180px;margin:0 auto;padding:20px 20px 56px;display:flex;flex-direction:column;gap:40px}
-.alert{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;font:600 14px var(--text);color:var(--ink);border:1.5px solid var(--red);border-radius:12px;padding:9px 14px}
-.alert b{color:var(--red)}
-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
-h1{margin:0;font:800 clamp(38px,6vw,60px)/1 var(--display);letter-spacing:-.035em;color:var(--ink)}
+body{margin:0;background:var(--bg);color:var(--body);font:16px/1.55 var(--text)}
+a{color:var(--red);text-underline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 24px 72px}
+.mast{display:flex;justify-content:space-between;align-items:flex-start;gap:10px 32px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1.5px solid var(--ink)}
+h1{margin:0;font:800 clamp(40px,6.5vw,64px)/.98 var(--display);letter-spacing:-.035em;color:var(--ink)}
 h1 span{color:var(--red)}
-h2{margin:0;font:800 clamp(26px,3.4vw,34px)/1.1 var(--display);letter-spacing:-.025em;color:var(--ink);text-wrap:balance}
-.sub{margin:10px 0 0;max-width:660px;color:var(--body);font-size:17px}
-.eyebrow{font:500 12.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
-.note{font-size:14px;color:var(--mute)}
-.block{display:flex;flex-direction:column;gap:16px}
-.lead{margin:0;max-width:760px;font:600 20px/1.4 var(--display);color:var(--ink);text-wrap:pretty}
-mark{background:var(--yelt);color:var(--ink);padding:0 .12em;border-radius:3px}
-.intro{margin:0;max-width:760px;font-size:15px;color:var(--body)}
-.tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.tchart{background:var(--well);border-radius:14px;padding:14px 16px 12px;display:flex;flex-direction:column;gap:4px;min-width:0}
-.tchart svg{margin-top:auto}
-.tchart h3{margin:0;font:700 17px/1.2 var(--display);color:var(--ink)}
-.chg{font:700 16px var(--display);color:var(--ink)}
-.chg.up{color:var(--red)}
-.tchart .now{font:500 12.5px/1.45 var(--mono);color:var(--mute);margin-bottom:6px}
-.tchart .now span{display:block}
-.tchart .now b{color:var(--ink);font-weight:500}
-.tchart .cite{font:500 12px/1.4 var(--mono);color:var(--mute)}
-.tkey{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 13px var(--mono);color:var(--body)}
-.tkey span{display:inline-flex;align-items:center;gap:7px}
-.ring,.solid{width:10px;height:10px;border-radius:50%;display:block}
+.dek{margin:12px 0 0;max-width:580px;font-size:17px;color:var(--body)}
+.updated{margin:8px 0 0;font:500 13px var(--mono);color:var(--mute);white-space:nowrap}
+.alert{margin:18px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--red);font-size:15px;color:var(--ink)}
+.alert b{color:var(--red)}
+.sec{margin-top:72px;display:flex;flex-direction:column;gap:18px}
+h2{margin:0;font:800 clamp(26px,3.2vw,32px)/1.1 var(--display);letter-spacing:-.025em;color:var(--ink);text-wrap:balance}
+.sechead{display:flex;justify-content:space-between;align-items:baseline;gap:8px 24px;flex-wrap:wrap}
+.meta{margin:0;font:500 13px var(--mono);color:var(--mute)}
+.lead{margin:0;max-width:720px;font:600 21px/1.4 var(--display);color:var(--ink);text-wrap:pretty}
+mark{background:var(--yelt);color:var(--ink);padding:0 .12em;border-radius:2px}
+.intro{margin:0;max-width:680px;font-size:15.5px}
+.tkey{margin:0;display:flex;flex-wrap:wrap;gap:6px 22px;font:500 12.5px var(--mono);color:var(--body)}
+.tkey span,.legend span{display:inline-flex;align-items:center;gap:8px}
+.ring,.solid{width:10px;height:10px;border-radius:50%;display:block;flex:none}
 .ring{border:1.5px solid var(--ink)} .solid{background:var(--red)}
-.stats{font:500 13px var(--mono);color:var(--mute)}
-.filters{display:flex;flex-direction:column;gap:10px}
-.fgroup{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.fgroup .lab{font:500 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);min-width:84px}
-.fgroup .lab.inline{min-width:0}
-.pair{display:inline-flex;align-items:center;gap:8px;margin-right:10px}
-.chipbtn{font:600 14px var(--text);border:1.5px solid var(--rule);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
-.chipbtn[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}
-.chipbtn:focus-visible,select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g[role="button"]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-select{font:600 14px var(--text);color:var(--ink);background:var(--card);border:1.5px solid var(--rule);border-radius:10px;padding:6px 10px}
+.tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 36px;margin-top:6px}
+.tchart{min-width:0;display:flex;flex-direction:column;border-top:1px solid var(--rule2);padding-top:12px}
+.tchart h3{margin:0;font:700 16px/1.25 var(--display);color:var(--ink)}
+.chg{margin:4px 0 0;font:800 26px/1.1 var(--display);letter-spacing:-.02em;color:var(--ink)}
+.chg span{font:500 13px var(--mono);letter-spacing:0;color:var(--mute);margin-left:8px}
+.chg.up{color:var(--red)}
+.now{margin:4px 0 10px;font:500 12.5px/1.45 var(--mono);color:var(--mute)}
+.now b{font-weight:500;color:var(--ink)}
+.cite{margin:6px 0 0;font:500 12px var(--mono);color:var(--mute)}
+.filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 20px}
+.fsel{display:flex;flex-direction:column;gap:5px;font:500 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+select{font:600 14.5px var(--text);letter-spacing:0;text-transform:none;color:var(--ink);background:var(--bg);border:1.5px solid var(--rule2);border-radius:8px;padding:6px 10px;min-width:150px}
+.showing{margin-left:auto;padding-bottom:8px}
+.legend{margin:0;display:flex;flex-wrap:wrap;gap:6px 22px;font:500 12.5px var(--mono);color:var(--body)}
 .dot{width:10px;height:10px;border-radius:50%;display:block;flex:none}
+.dot.big{width:14px;height:14px}
 .c-opioid{background:var(--red)} .c-benzo{background:var(--yel);box-shadow:inset 0 0 0 1.5px var(--yeld)} .c-sedative{background:var(--slate)} .c-all{background:var(--gray)}
-.legend{display:flex;flex-wrap:wrap;gap:6px 20px;font:500 13px var(--mono);color:var(--body)}
-.legend span{display:inline-flex;align-items:center;gap:7px}
-.legend .big{width:14px;height:14px}
-.dot.clus{width:14px;height:14px;background:var(--ink)}
-.grid{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px}
-.panel{background:var(--well);border-radius:16px;padding:16px 18px;min-width:0}
-.fig{font:500 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:0 0 10px}
-.fig b{color:var(--ink);font-weight:500}
+.newring{width:16px;height:16px;border-radius:50%;border:2.5px solid var(--yel);display:block;flex:none}
+.clus{width:14px;height:14px;border-radius:50%;background:var(--ink);display:block}
+.grid{position:relative;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:40px;align-items:start;margin-top:10px}
+.fig{margin:0;min-width:0}
+figcaption,.offmap h3{margin:0 0 12px;font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);display:flex;justify-content:space-between;gap:4px 12px;flex-wrap:wrap}
+figcaption span{letter-spacing:0;text-transform:none;color:var(--mute)}
 svg{display:block;width:100%;height:auto}
 svg text{font-family:var(--mono)}
 #timeline{touch-action:pan-y;user-select:none;-webkit-user-select:none}
-.offmap{margin-top:14px;display:flex;flex-direction:column;gap:2px}
-.offmap .eyebrow{margin-bottom:4px}
-.om{display:grid;grid-template-columns:10px 98px minmax(0,1fr);gap:10px;align-items:baseline;text-align:left;font:14px/1.35 var(--text);color:var(--ink);background:none;border:none;border-radius:8px;padding:6px 8px;cursor:pointer}
-.om:hover{background:var(--card)}
-.om .dot{align-self:start;margin-top:5px}
-.om .d{font:500 12.5px var(--mono);color:var(--mute)}
-.om .p{color:var(--mute)}
-.pop{position:absolute;z-index:5;width:min(330px,calc(100% - 16px));background:var(--card);color:var(--body);border:1.5px solid var(--ink);border-radius:12px;padding:12px 14px 12px;box-shadow:0 10px 30px var(--shadow);display:flex;flex-direction:column;gap:8px}
+.side{display:flex;flex-direction:column;gap:36px;min-width:0}
+.offmap{display:flex;flex-direction:column}
+.om{display:grid;grid-template-columns:10px 92px minmax(0,1fr);gap:10px;align-items:start;text-align:left;font:14.5px/1.4 var(--text);color:var(--ink);background:none;border:none;border-top:1px solid var(--rule);padding:9px 0;cursor:pointer}
+.om:hover .t{text-decoration:underline}
+.om .dot{margin-top:6px}
+.om .d{font:500 12.5px/1.6 var(--mono);color:var(--mute)}
+.om .p{display:block;color:var(--mute);font-size:13.5px}
+.offmap .note{margin:8px 0 0;font-size:13.5px;color:var(--mute)}
+.pop{position:absolute;z-index:5;width:min(330px,calc(100% - 16px));background:var(--card);color:var(--body);border:1.5px solid var(--ink);border-radius:10px;padding:12px 14px;box-shadow:0 10px 30px var(--shadow);display:flex;flex-direction:column;gap:8px}
 .pop .x{position:absolute;right:6px;top:4px;border:none;background:none;color:var(--mute);font:500 20px/1 var(--text);padding:4px 8px;cursor:pointer}
-.pop .pd{font:500 12.5px var(--mono);color:var(--mute);padding-right:26px}
-.pop .pt{font:700 16px/1.25 var(--display);color:var(--ink)}
-.pop .pm{font:500 12.5px/1.4 var(--mono);color:var(--body)}
+.pop .pd{font:500 12.5px/1.5 var(--mono);color:var(--mute);padding-right:26px}
+.pop .pt{font:700 16px/1.3 var(--display);color:var(--ink)}
+.pop .pm{font:500 12.5px/1.45 var(--mono);color:var(--body)}
 .pop .ps{font:600 14px var(--text);color:var(--ink)}
-.pop .pr{border-top:1px solid var(--rule);padding-top:8px;display:flex;flex-direction:column;gap:2px}
-.pop .more{align-self:flex-start;font:600 13px var(--text);color:var(--ink);background:var(--well);border:1.5px solid var(--rule);border-radius:999px;padding:4px 10px;cursor:pointer}
-.list{display:flex;flex-direction:column;gap:10px}
-.item{display:grid;grid-template-columns:118px minmax(0,1fr) auto;gap:14px;align-items:start;background:var(--card);border:1.5px solid var(--rule);border-radius:14px;padding:14px 16px}
-.item.flash{border-color:var(--red)}
-.item .when{font:500 13px var(--mono);color:var(--mute)}
+.pop .pr{border-top:1px solid var(--rule);padding-top:8px;display:flex;flex-direction:column;gap:3px}
+.pop .more2{align-self:flex-start;font:600 13px var(--text);color:var(--ink);background:none;border:1.5px solid var(--rule2);border-radius:999px;padding:4px 10px;cursor:pointer}
+.list{display:flex;flex-direction:column;border-top:1.5px solid var(--ink);margin-top:14px}
+.item{display:grid;grid-template-columns:150px minmax(0,1fr) 170px;gap:20px;align-items:start;padding:18px 0;border-bottom:1px solid var(--rule)}
+.item.flash{background:var(--yelt)}
+.item .when{font:500 13px/1.55 var(--mono);color:var(--mute)}
 .item .when b{display:block;font:600 14px var(--mono);color:var(--ink)}
-.item h3{margin:0;font:700 18px/1.25 var(--display);color:var(--ink);letter-spacing:-.01em;text-wrap:balance}
-.item p{margin:4px 0 0;font-size:15px;color:var(--body)}
-.item .meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.tag{font:500 12.5px var(--mono);border-radius:999px;padding:3px 9px;background:var(--well);color:var(--ink)}
-.tag.opioid{background:var(--redt)} .tag.benzo{background:var(--yelt)} .tag.sedative{background:var(--slatet)}
-.item .src{font:500 13px var(--mono);text-align:right;min-width:0}
-.item .dead{display:block;font:800 22px/1 var(--display);color:var(--red);margin-bottom:4px}
-.keywrap{overflow-x:auto;margin-top:14px}
-.key{width:100%;border-collapse:collapse;font-size:14.5px}
-.key .kname{display:flex;align-items:center;gap:8px}
-.key th{font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);text-align:left;vertical-align:bottom;padding:6px 10px;border-bottom:1.5px solid var(--rule)}
-.key td{padding:8px 10px;border-bottom:1px solid var(--rule);color:var(--ink)}
+.item .when span{display:block}
+.new{display:inline-block;margin-top:6px;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--yelt);color:var(--ink);padding:1px 6px;border-radius:3px}
+.item h3{margin:0;font:700 18px/1.3 var(--display);color:var(--ink);text-wrap:balance}
+.item p{margin:6px 0 0;font-size:15px;max-width:66ch}
+.item .tags{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:10px}
+.tag{display:inline-flex;align-items:center;gap:7px;font:500 12.5px var(--mono);color:var(--ink)}
+.mol{font:500 12.5px var(--mono);color:var(--mute)}
+.item .src{text-align:right;font:500 13px var(--mono)}
+.item .dead{display:block;font:800 22px/1 var(--display);color:var(--red);margin-bottom:8px}
+.morebtn{align-self:flex-start;margin-top:6px;font:600 14px var(--text);color:var(--ink);background:none;border:1.5px solid var(--rule2);border-radius:8px;padding:8px 14px;cursor:pointer}
+.keywrap{overflow-x:auto}
+.key{width:100%;max-width:860px;border-collapse:collapse;font-size:15px}
+.key th{font:500 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);text-align:left;vertical-align:bottom;padding:8px 16px 8px 0;border-bottom:1.5px solid var(--ink)}
+.key td{padding:10px 16px 10px 0;border-bottom:1px solid var(--rule);color:var(--ink)}
+.key .kname{display:flex;align-items:center;gap:9px}
 .key .no{color:var(--red);font-weight:700} .key .yes{font-weight:700}
-.give{margin:12px 0 0;font-size:14.5px;color:var(--ink)}
+.give{margin:0;max-width:720px;font-size:15.5px;color:var(--ink)}
 .give b{color:var(--red)}
-.empty{background:var(--well);border-radius:14px;padding:22px;color:var(--body)}
-.about{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 32px}
-.about div{min-width:0}
-.about h3{margin:0 0 4px;font:700 17px var(--display);color:var(--ink)}
-.about p{margin:0;font-size:15px;max-width:62ch}
-footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-direction:column;gap:6px}
-@media (max-width:980px){.tgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:860px){.grid{grid-template-columns:1fr}.item{grid-template-columns:1fr}.item .src{text-align:left}.about{grid-template-columns:1fr}}
-@media (max-width:620px){.tgrid{grid-template-columns:1fr}.wrap{gap:32px}}
-@media (prefers-reduced-motion:no-preference){.item{transition:border-color .3s}}
+.about{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 48px}
+.about h3{margin:0 0 6px;font:700 17px var(--display);color:var(--ink)}
+.about p{margin:0;font-size:15px;max-width:60ch}
+footer{margin-top:72px;padding-top:16px;border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--mute)}
+footer p{margin:0}
+.chipbtn:focus-visible,select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g[role="button"]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (max-width:980px){.tgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}}
+@media (max-width:720px){.item{grid-template-columns:1fr;gap:8px}.item .src{text-align:left}.about{grid-template-columns:1fr}.showing{margin-left:0;width:100%;padding-bottom:0}}
+@media (max-width:600px){.tgrid{grid-template-columns:1fr}.wrap{padding:20px 16px 56px}.sec{margin-top:56px}select{min-width:0}}
+@media (prefers-reduced-motion:no-preference){.item{transition:background-color .4s}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="alert" role="note"><b>Someone won’t wake up?</b><span>Call 911 · give Narcan · keep them breathing</span></div>
-
-  <header>
+  <header class="mast">
     <div>
-      <div class="eyebrow">Bay Area · California · Nevada · national signals</div>
       <h1>Overdose <span>Watch</span></h1>
-      <p class="sub">Are overdose deaths going down where we live and dance? Official death counts first, then every reported overdose, alert and new drug we can find, each with its source.</p>
+      <p class="dek">Overdose deaths and new drugs in the Bay Area, California and Nevada, from official counts and primary sources.</p>
     </div>
-    <div class="note" id="updated">Loading…</div>
+    <p class="updated" id="updated">Loading…</p>
   </header>
+  <p class="alert" role="note"><b>Someone won’t wake up?</b> Call 911, give Narcan, and keep them breathing.</p>
 
-  <section class="block" aria-labelledby="h-trend">
+  <section class="sec" aria-labelledby="h-trend">
     <h2 id="h-trend">Is it going down?</h2>
     <p class="lead" id="answer">Loading the official counts…</p>
-    <p class="intro">Each chart shows drug overdose deaths in the 12 months up to each month. A 12-month total smooths out seasons and one-off spikes. Recent months are provisional and can still rise as death investigations close; CDC county counts run about six months behind, San Francisco’s own count about one.</p>
-    <div class="tkey"><span><i class="solid"></i>latest 12 months</span><span><i class="ring"></i>the 12 months a year earlier</span></div>
+    <p class="intro">Each line counts drug overdose deaths in the 12 months up to that month, which smooths out seasons and one-off spikes. Recent months are provisional and can still rise.</p>
+    <p class="tkey"><span><i class="solid"></i>latest 12 months</span><span><i class="ring"></i>the 12 months a year earlier</span></p>
     <div class="tgrid" id="tgrid"></div>
   </section>
 
-  <section class="block" aria-labelledby="h-reports">
-    <div>
-      <h2 id="h-reports">Reports</h2>
-      <p class="stats" id="stats"></p>
-    </div>
+  <section class="sec" aria-labelledby="h-reports">
+    <div class="sechead"><h2 id="h-reports">Reports</h2><p class="meta" id="stats"></p></div>
     <div class="filters" aria-label="Filters">
-      <div class="fgroup"><span class="lab">When</span><span id="whenchips" style="display:contents"></span></div>
-      <div class="fgroup"><span class="lab">Substance</span><span id="subchips" style="display:contents"></span></div>
-      <div class="fgroup">
-        <span class="pair"><span class="lab">Where</span>
-        <select id="f-region" aria-label="Region"><option value="">Everywhere</option><option>Bay Area</option><option>California</option><option>Nevada</option><option>US</option></select></span>
-        <span class="pair"><span class="lab inline">Type</span>
-        <select id="f-kind" aria-label="Report type"><option value="">All types</option><option value="death">Deaths</option><option value="cluster">Clusters</option><option value="alert">Alerts</option><option value="seizure">Seizures</option><option value="drug-checking">Drug checking</option><option value="data">Data</option><option value="policy">Policy</option><option value="response">Response</option></select></span>
-      </div>
-      <p class="stats" id="showing" aria-live="polite"></p>
+      <label class="fsel">Time<select id="f-when"><option value="all">All time</option><option value="p365">Past year</option><option value="p90">Past 90 days</option></select></label>
+      <label class="fsel">Drug<select id="f-sub"><option value="">All drugs</option></select></label>
+      <label class="fsel">Where<select id="f-region"><option value="">Everywhere</option><option>Bay Area</option><option>California</option><option>Nevada</option><option>US</option></select></label>
+      <label class="fsel">Type<select id="f-kind"><option value="">All types</option><option value="death">Deaths</option><option value="cluster">Clusters</option><option value="alert">Alerts</option><option value="seizure">Seizures</option><option value="drug-checking">Drug checking</option><option value="data">Data</option><option value="policy">Policy</option><option value="response">Response</option></select></label>
+      <p class="meta showing" id="showing" aria-live="polite"></p>
     </div>
-    <div class="legend" aria-label="Dot colors">
+    <p class="legend" aria-label="Map key">
       <span><i class="dot c-opioid"></i>opioid</span>
       <span><i class="dot c-benzo"></i>benzodiazepine</span>
       <span><i class="dot c-sedative"></i>animal sedative</span>
       <span><i class="dot c-all"></i>mixed or all drugs</span>
-      <span><i class="dot c-opioid big"></i>larger map dot: deaths reported</span>
-      <span id="lg-cluster" hidden><i class="dot clus"></i>numbered circle: 10 or more reports in one place</span>
-    </div>
+      <span><i class="dot c-opioid big"></i>deaths reported</span>
+      <span id="lg-new" hidden><i class="newring"></i>new this week</span>
+      <span id="lg-cluster" hidden><i class="clus"></i>10 or more in one place</span>
+    </p>
     <div class="grid" id="grid">
-      <div class="panel">
-        <p class="fig"><b>Map</b> · tap a point for its source · positions approximate</p>
-        <svg id="map" viewBox="0 0 540 320" role="img" aria-label="Map of reported incidents: California and Nevada, and an enlarged Bay Area with its shoreline."></svg>
+      <figure class="fig">
+        <figcaption>Where</figcaption>
+        <svg id="map" viewBox="0 0 640 380" role="img" aria-label="Map of reported incidents: California and Nevada, and an enlarged Bay Area with its shoreline."></svg>
+      </figure>
+      <div class="side">
+        <figure class="fig">
+          <figcaption>When <span>Drag across months to filter.</span></figcaption>
+          <svg id="timeline" viewBox="0 0 440 150" role="img" aria-label="Reports per month since January 2025; each dot is one report, colored by drug class. Drag across months to filter the map and list."></svg>
+        </figure>
         <div class="offmap" id="offmap" hidden></div>
-      </div>
-      <div class="panel">
-        <p class="fig"><b>Timeline</b> · reports per month · drag across months to filter</p>
-        <svg id="timeline" viewBox="0 0 500 150" role="img" aria-label="Reports per month since January 2025; each dot is one report, colored by drug class. Drag across months to filter the map and list."></svg>
-        <div class="keywrap"><table class="key" aria-label="What each substance means for Narcan and fentanyl test strips">
-          <thead><tr><th>Substance</th><th>Narcan reverses it?</th><th>Fentanyl strip detects it?</th></tr></thead>
-          <tbody id="keybody"></tbody>
-        </table></div>
-        <p class="give"><b>Give Narcan to anyone who may be overdosing.</b> Benzos and sedatives usually come mixed with opioids, and Narcan reverses the opioid part.</p>
       </div>
       <div class="pop" id="pop" role="dialog" aria-label="Report source" hidden></div>
     </div>
-    <div class="list" id="list"><div class="empty">Loading reports…</div></div>
+    <div class="list" id="list"><p class="meta" style="padding:18px 0">Loading reports…</p></div>
+    <button class="morebtn" id="more" type="button" hidden></button>
   </section>
 
-  <section class="block" aria-labelledby="h-about">
+  <section class="sec" aria-labelledby="h-drugs">
+    <h2 id="h-drugs">What each drug means for Narcan</h2>
+    <div class="keywrap"><table class="key" aria-label="What each substance means for Narcan and fentanyl test strips">
+      <thead><tr><th>Substance</th><th>Narcan reverses it?</th><th>Fentanyl strip detects it?</th></tr></thead>
+      <tbody id="keybody"></tbody>
+    </table></div>
+    <p class="give"><b>Give Narcan to anyone who may be overdosing.</b> Benzos and sedatives usually come mixed with opioids, and Narcan reverses the opioid part.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="h-about">
     <h2 id="h-about">How this works</h2>
     <div class="about">
-      <div><h3>What counts as a report</h3><p>Overdose deaths and clusters, public-health alerts, drug-checking findings, seizures that name a substance in California or Nevada, official data releases, and policy changes that affect Narcan or new drugs. Reports from other states are included only when they concern a new substance or a national alert.</p></div>
-      <div><h3>Why points, not a heat map</h3><p>A few dozen reports of very different kinds (one death, a statewide data release, a seizure) would make a heat map that shows where news coverage happens, not where people overdose. Each point is one report with its source. For how many people are dying, and whether that is falling, use the official counts at the top.</p></div>
-      <div><h3>How it updates</h3><p>Every Monday an AI-assisted search (Claude) looks through news, health departments, medical examiners, the DEA and CDC, and drug-checking programs, checks each new report against its source, and adds it here. The official counts are refreshed from the CDC and San Francisco open-data APIs at the same time. Spotted a mistake? <a href="https://github.com/kat-titter/overdose-watch/issues">Open an issue</a>.</p></div>
-      <div><h3>Sources</h3><p>Death counts: <a href="https://data.cdc.gov/d/xkb8-kh2a">CDC NCHS provisional counts</a> (states and US), <a href="https://data.cdc.gov/d/gb4e-yj24">CDC county counts</a>, and the <a href="https://data.sf.gov/d/jxrr-bmra">San Francisco Medical Examiner’s monthly counts</a>. Reports: each card links its own source. Data files: <a href="https://github.com/kat-titter/overdose-watch/tree/main/data">incidents.json and trend.json</a>.</p></div>
+      <div><h3>Updated automatically, every week</h3><p>A scheduled job runs every Monday. It refreshes the official death counts from the CDC and San Francisco open-data APIs, then searches for new reports, checks each one against its source, and adds those that qualify. Reports added in the past week carry a yellow ring on the map.</p></div>
+      <div><h3>Trusted primary sources only</h3><p>Every report links to the organization that produced the information: health departments, medical examiners, the CDC and DEA, the Federal Register, attorneys general, police and courts, and drug-checking programs. News coverage alone does not qualify.</p></div>
+      <div><h3>Points, not a heat map</h3><p>A few dozen reports of different kinds would make a heat map of where news happens, not where people overdose. Each point is one report, placed approximately. For how many people are dying, use the official counts above.</p></div>
+      <div><h3>Data and corrections</h3><p>The data files are public: <a href="https://github.com/kat-titter/overdose-watch/tree/main/data">incidents.json and trend.json</a>. Official counts come from <a href="https://data.cdc.gov/d/xkb8-kh2a">CDC state counts</a>, <a href="https://data.cdc.gov/d/gb4e-yj24">CDC county counts</a> and the <a href="https://data.sf.gov/d/jxrr-bmra">San Francisco Medical Examiner</a>. Spotted a mistake? <a href="https://github.com/kat-titter/overdose-watch/issues">Open an issue</a>.</p></div>
     </div>
   </section>
 
   <footer>
-    <p class="note" style="margin:0">Harm-reduction information, not medical advice. If someone won’t wake up or isn’t breathing normally, call 911 and give Narcan. Positions on the map are approximate; posts from X appear only when they surface in web search.</p>
-    <p class="note" style="margin:0">A community harm-reduction project by Kat Titterton, San Francisco.</p>
+    <p>Harm-reduction information, not medical advice. If someone won’t wake up or isn’t breathing normally, call 911 and give Narcan.</p>
+    <p>A community harm-reduction project by Kat Titterton, San Francisco.</p>
   </footer>
 </div>
 
@@ -233,49 +230,49 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
   const E=(p,t,a,txt)=>{const e=document.createElementNS(NS,t);for(const k in a)if(a[k]!=null)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;p.appendChild(e);return e;};
   const H=(t,cls,txt)=>{const e=document.createElement(t);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
   const $=id=>document.getElementById(id);
-  const state={rows:[],trend:null,subs:new Set(),region:'',kind:'',when:{k:'all'}};
-  const NOW=new Date(),iso=d=>d.toISOString().slice(0,10);
+  const state={rows:[],trend:null,sub:'',region:'',kind:'',when:{k:'all'},showAll:false};
+  const NOW=new Date(),iso=d=>d.toISOString().slice(0,10),LIST=8;
+  // reports added by an update in the past week (not the first seeding) get a yellow ring
+  const isNew=r=>!!r.via&&r.via!=='seed'&&Date.now()-Date.parse((r.added||'1970-01-01')+'T12:00:00')<7.5*864e5;
 
-  // ---- substance key + chips (reference knowledge, not records)
-  const kb=$('keybody');
+  // ---- substance key and the drug filter (reference knowledge, not records)
+  const kb=$('keybody'),fs=$('f-sub');
   Object.entries(SUB).filter(([k])=>k!=='all').forEach(([k,s])=>{const tr=document.createElement('tr');
-    const td=(t,c)=>{const d=H('td',c,t);tr.appendChild(d);};
+    const td=(t,c)=>tr.appendChild(H('td',c,t));
     const c=H('td'),w=H('span','kname'),i=H('i','dot c-'+s.cls);i.setAttribute('role','img');i.setAttribute('aria-label',CLS[s.cls].name);
-    w.append(i,s.label);c.appendChild(w);tr.appendChild(c);td(s.narcan,s.narcan==='no'?'no':'yes');td(s.strip,s.strip==='no'?'no':'');kb.appendChild(tr);});
-  const chips=$('subchips');
-  Object.entries(SUB).filter(([k])=>k!=='all').forEach(([k,s])=>{const b=H('button','chipbtn');b.type='button';b.setAttribute('aria-pressed','false');
-    b.appendChild(H('i','dot c-'+s.cls));b.appendChild(document.createTextNode(s.label));
-    b.addEventListener('click',()=>{state.subs.has(k)?state.subs.delete(k):state.subs.add(k);b.setAttribute('aria-pressed',state.subs.has(k));render();});chips.appendChild(b);});
+    w.append(i,s.label);c.appendChild(w);tr.appendChild(c);td(s.narcan,s.narcan==='no'?'no':'yes');td(s.strip,s.strip==='no'?'no':'');kb.appendChild(tr);
+    const o=H('option',null,s.label);o.value=k;fs.appendChild(o);});
+  fs.addEventListener('change',e=>{state.sub=e.target.value;render();});
   $('f-region').addEventListener('change',e=>{state.region=e.target.value;render();});
   $('f-kind').addEventListener('change',e=>{state.kind=e.target.value;render();});
+  $('more').addEventListener('click',()=>{state.showAll=!state.showAll;render();});
 
-  // ---- time window: presets, years in the data, or a custom month range dragged on the timeline
+  // ---- time window: all, past year, past 90 days, or a month range dragged on the timeline
   const ym=i=>{const t=2025*12+i;return `${Math.floor(t/12)}-${String(t%12+1).padStart(2,'0')}`;};      // month index (Jan 2025 = 0) -> "YYYY-MM"
   const mi=s=>(Number(s.slice(0,4))-2025)*12+Number(s.slice(5,7))-1;
   const monthName=s=>`${MON[Number(s.slice(5,7))-1]} ${s.slice(0,4)}`;
   function windowOf(w){
     if(w.k==='p90'||w.k==='p365')return{from:iso(new Date(NOW-(w.k==='p90'?90:365)*864e5)),to:'9999-12-31'};
-    if(w.k==='year')return{from:`${w.y}-01-01`,to:`${w.y}-12-31`};
     if(w.k==='custom')return{from:`${w.from}-01`,to:`${w.to}-31`};
     return null;}
   const inWindow=(r,win)=>!win||((r.date||'')>=win.from&&(r.date||'')<=win.to);
-  function buildWhen(){const box=$('whenchips');box.replaceChildren();
-    const years=[...new Set(state.rows.map(r=>(r.date||'').slice(0,4)).filter(Boolean))].sort().reverse();
-    const opts=[{k:'all',t:'All time'},{k:'p90',t:'Past 90 days'},{k:'p365',t:'Past year'},...years.map(y=>({k:'year',y,t:y}))];
-    if(state.when.k==='custom')opts.push({k:'custom',t:`${monthName(state.when.from)}${state.when.to!==state.when.from?' – '+monthName(state.when.to):''} ✕`,clear:true});
-    opts.forEach(o=>{const b=H('button','chipbtn',o.t);b.type='button';
-      const on=o.k===state.when.k&&(o.k!=='year'||o.y===state.when.y);b.setAttribute('aria-pressed',on);
-      if(o.clear)b.setAttribute('aria-label','Clear the custom time range');
-      b.addEventListener('click',()=>{state.when=o.clear?{k:'all'}:o.k==='year'?{k:'year',y:o.y}:{k:o.k};buildWhen();render();});box.appendChild(b);});}
+  const fw=$('f-when');
+  function syncWhen(){let c=fw.querySelector('option[value="custom"]');
+    if(state.when.k==='custom'){if(!c){c=H('option');c.value='custom';fw.appendChild(c);}
+      c.textContent=state.when.from===state.when.to?monthName(state.when.from):`${monthName(state.when.from)} to ${monthName(state.when.to)}`;fw.value='custom';}
+    else{if(c)c.remove();fw.value=state.when.k;}}
+  fw.addEventListener('change',()=>{if(fw.value!=='custom')state.when={k:fw.value};syncWhen();render();});
 
   const clsOf=r=>{const s=(r.subs||[]).map(k=>SUB[k]).filter(Boolean);const c=s.find(x=>x.cls==='opioid')||s[0];return c?c.cls:'all';};
   function base(){return state.rows.filter(r=>{
     if(state.region&&r.region!==state.region&&!(state.region==='California'&&r.region==='Bay Area'))return false;
     if(state.kind&&r.kind!==state.kind)return false;
-    if(state.subs.size&&!(r.subs||[]).some(k=>state.subs.has(k)))return false;return true;});}
+    if(state.sub&&!(r.subs||[]).includes(state.sub))return false;return true;});}
   const fmtDate=r=>{const d=r.date||'';const y=d.slice(0,4),mo=MON.at(Number(d.slice(5,7))-1)||'',day=Number(d.slice(8,10));
     return r.datePrec==='year'?y:r.datePrec==='month'?`${mo} ${y}`:`${mo} ${day}, ${y}`;};
-  function flash(id){closePop();const el=document.getElementById('it-'+id);if(!el)return;el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),1600);}
+  function flash(id){closePop();
+    if(!document.getElementById('it-'+id)&&!state.showAll){state.showAll=true;render();}
+    const el=document.getElementById('it-'+id);if(!el)return;el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),1800);}
 
   // ---- citation popover: every point opens its source
   const pop=$('pop');let popFrom=null;
@@ -283,15 +280,15 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
   function openPop(anchor,rows,viaKey){
     pop.replaceChildren();const x=H('button','x','×');x.type='button';x.setAttribute('aria-label','Close');x.addEventListener('click',closePop);pop.appendChild(x);
     const one=rows.length===1;
-    if(!one){const h=H('div','pt',`${rows.length} reports here`);pop.appendChild(h);}
+    if(!one)pop.appendChild(H('div','pt',`${rows.length} reports here`));
     rows.slice(0,6).forEach(r=>{const box=one?pop:H('div','pr');
-      box.appendChild(H('div','pd',`${fmtDate(r)} · ${r.place}`));box.appendChild(H('div','pt',r.title));
+      const pd=H('div','pd');pd.append(fmtDate(r),document.createElement('br'),r.place);box.appendChild(pd);box.appendChild(H('div','pt',r.title));
       const bits=[r.molecules,typeof r.deaths==='number'&&r.deaths>0?r.deaths+(r.deaths===1?' death':' deaths'):''].filter(Boolean);
-      if(bits.length)box.appendChild(H('div','pm',bits.join(' · ')));
+      if(bits.length)box.appendChild(H('div','pm',bits.join('; ')));
       const s=H('div','ps','Source: ');const a=H('a',null,(r.source||'source')+' ↗');a.href=r.url;a.target='_blank';a.rel='noopener';s.appendChild(a);box.appendChild(s);
-      if(one){const m=H('button','more','Show in the list');m.type='button';m.addEventListener('click',()=>flash(r.id));box.appendChild(m);}
+      if(one){const m=H('button','more2','Show in the list');m.type='button';m.addEventListener('click',()=>flash(r.id));box.appendChild(m);}
       if(!one)pop.appendChild(box);});
-    if(rows.length>6)pop.appendChild(H('div','pm',`+ ${rows.length-6} more in the list below`));
+    if(rows.length>6)pop.appendChild(H('div','pm',`and ${rows.length-6} more in the list below`));
     pop.hidden=false;popFrom=anchor;
     const g=$('grid').getBoundingClientRect(),a=anchor.getBoundingClientRect(),pw=pop.offsetWidth,ph=pop.offsetHeight;
     let left=a.left+a.width/2-g.left-pw/2;left=Math.max(8,Math.min(left,g.width-pw-8));
@@ -303,10 +300,11 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
   function hook(el,rows){el.setAttribute('data-pop','');el.style.cursor='pointer';
     el.addEventListener('click',e=>{e.stopPropagation();openPop(el,rows,e.detail===0);});
     el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPop(el,rows,true);}});}
-  function dot(g,r,x,y,rad,dim){const c=CLS[clsOf(r)];
+  function dot(g,r,x,y,rad,dim,ringless){const c=CLS[clsOf(r)];
+    if(isNew(r)&&!dim&&!ringless)E(g,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:rad+3.5,fill:'none',stroke:'var(--yel)','stroke-width':2.5,'pointer-events':'none'});
     const el=E(g,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:rad,fill:c.col,stroke:c.edge||'var(--water)','stroke-width':1.5,tabindex:0,role:'button','opacity':dim?.25:null,
-      'aria-label':`${fmtDate(r)}, ${r.place}: ${r.title}. Source: ${r.source}`});
-    E(el,'title',{},`${fmtDate(r)} · ${r.place}\n${r.title}\nSource: ${r.source}`);hook(el,[r]);return el;}
+      'aria-label':`${fmtDate(r)}, ${r.place}: ${r.title}. Source: ${r.source}${isNew(r)?'. New this week':''}`});
+    E(el,'title',{},`${fmtDate(r)}, ${r.place}\n${r.title}\nSource: ${r.source}`);hook(el,[r]);return el;}
 
   // ---- map geometry: equirectangular at 37.6°N, outlines from rounded coordinates [lat, lon]
   const COS=Math.cos(37.6*Math.PI/180);
@@ -318,15 +316,17 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
   const NV=[[42,-120],[42,-114.04],[36.2,-114.04],[36.02,-114.74],[35,-114.63],[39,-120]];
   const COAST=[[37.895,-122.62],[37.875,-122.6],[37.855,-122.57],[37.83,-122.53],[37.818,-122.505],[37.812,-122.48],[37.8,-122.478],[37.79,-122.485],[37.785,-122.505],[37.775,-122.513],[37.735,-122.507],[37.7,-122.502],[37.65,-122.495],[37.61,-122.497],[37.59,-122.515],[37.545,-122.517],[37.5,-122.5],[37.475,-122.45],[37.43,-122.43],[37.37,-122.41],[37.32,-122.405],[37.27,-122.41],[37.2,-122.39]];
   const BAY=[[37.815,-122.53],[37.826,-122.49],[37.855,-122.478],[37.872,-122.462],[37.885,-122.44],[37.905,-122.455],[37.925,-122.47],[37.945,-122.485],[37.97,-122.492],[38.005,-122.5],[38.045,-122.5],[38.085,-122.485],[38.105,-122.44],[38.105,-122.36],[38.095,-122.3],[38.08,-122.26],[38.06,-122.235],[38.045,-122.255],[38.02,-122.32],[38,-122.365],[37.97,-122.415],[37.945,-122.41],[37.925,-122.39],[37.905,-122.375],[37.9,-122.33],[37.875,-122.31],[37.84,-122.3],[37.815,-122.315],[37.795,-122.32],[37.78,-122.295],[37.765,-122.285],[37.745,-122.255],[37.72,-122.235],[37.695,-122.205],[37.655,-122.165],[37.61,-122.14],[37.565,-122.105],[37.52,-122.05],[37.48,-121.995],[37.455,-121.97],[37.435,-121.975],[37.425,-122.01],[37.43,-122.06],[37.45,-122.11],[37.475,-122.155],[37.505,-122.205],[37.535,-122.24],[37.56,-122.27],[37.585,-122.305],[37.61,-122.355],[37.635,-122.375],[37.665,-122.38],[37.7,-122.385],[37.725,-122.365],[37.745,-122.38],[37.77,-122.385],[37.795,-122.393],[37.808,-122.41],[37.808,-122.43],[37.805,-122.455],[37.808,-122.475],[37.8,-122.5]];
-  const OVC=[['Sacramento',38.58,-121.49],['Reno',39.53,-119.81],['Black Rock City',40.79,-119.21],['Las Vegas',36.17,-115.14],['Los Angeles',34.05,-118.24],['San Diego',32.72,-117.16]];
+  const OVC=[['Reno',39.53,-119.81],['Black Rock City',40.79,-119.21],['Las Vegas',36.17,-115.14],['Los Angeles',34.05,-118.24],['San Diego',32.72,-117.16]];
   const INC=[['San Francisco',37.775,-122.418],['Oakland',37.804,-122.271],['Berkeley',37.872,-122.273],['San Rafael',37.974,-122.531],['Fremont',37.548,-121.989],['Palo Alto',37.442,-122.143],['San Jose',37.338,-121.886]];
   const POINT=new Set(['city','county','site']);
   const onMap=r=>typeof r.lat==='number'&&typeof r.lon==='number'&&(!r.geo||POINT.has(r.geo))&&inBox(OV,r.lat,r.lon);
   const poly=(g,pts,P,a)=>E(g,'path',Object.assign({d:'M'+pts.map(([la,lo])=>P.x(lo).toFixed(1)+' '+P.y(la).toFixed(1)).join('L')+'Z','stroke-linejoin':'round'},a));
+  const projPts=(pts,P)=>pts.map(([la,lo])=>[P.x(lo),P.y(la)]);
+  const inPoly=(x,y,pts)=>{let c=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const [xi,yi]=pts[i],[xj,yj]=pts[j];if((yi>y)!==(yj>y)&&x<(xj-xi)*(y-yi)/(yj-yi)+xi)c=!c;}return c;};
 
   // DM Mono: advance 0.6 em; its text box runs 1.0 em above the baseline and 0.5 em below.
   // Obstacles are boxes {x0,y0,x1,y1} (m: a city marker a dot may cover) or line segments {seg:[x1,y1,x2,y2]} that text must not cross.
-  const FS=11.5,box=(x,y,r)=>({x0:x-r,y0:y-r,x1:x+r,y1:y+r});
+  const CITY=10,REGION={fs:12,ls:1.8,fill:'var(--ink)',weight:500},box=(x,y,r)=>({x0:x-r,y0:y-r,x1:x+r,y1:y+r});
   const segHit=(r,[x1,y1,x2,y2])=>{let t0=0,t1=1;const dx=x2-x1,dy=y2-y1;   // Liang-Barsky clip of the segment against the box
     for(const [p,q] of [[-dx,x1-r.x0],[dx,r.x1-x1],[-dy,y1-r.y0],[dy,r.y1-y1]]){
       if(p===0){if(q<0)return false;}else{const t=q/p;if(p<0){if(t>t1)return false;if(t>t0)t0=t;}else{if(t<t0)return false;if(t<t1)t1=t;}}}
@@ -335,7 +335,7 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   // Try spots around an anchor (a point, or a box of half-size hw x hh) at growing distances; past 10 px a thin leader ties label to anchor.
   function label(g,txt,x,y,obst,bd,o={}){
-    const fs=o.fs||FS,ls=o.ls||0,w=txt.length*(fs*.6+ls),hw=o.hw||0,hh=o.hh||0;
+    const fs=o.fs||CITY,ls=o.ls||0,w=txt.length*(fs*.6+ls),hw=o.hw||0,hh=o.hh||0;
     const at={r:d=>['start',x+hw+d,y+fs*.35],l:d=>['end',x-hw-d,y+fs*.35],u:d=>['middle',x,y-hh-d-fs*.5],dn:d=>['middle',x,y+hh+d+fs],
       ur:d=>['start',x+hw+d*.7,y-hh-d*.7-fs*.5],dr:d=>['start',x+hw+d*.7,y+hh+d*.7+fs],ul:d=>['end',x-hw-d*.7,y-hh-d*.7-fs*.5],dl:d=>['end',x-hw-d*.7,y+hh+d*.7+fs]};
     const D=o.dists||[5,10,16,24,34,46,60],K=o.order||['r','l','u','dn','ur','dr','ul','dl'];
@@ -347,44 +347,47 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
         const L=Math.hypot(nx-sx,ny-sy),k0=hw||hh?0:3.5/L,k1=2/L;   // start clear of the marker, stop short of the text
         if(L>6){const seg=[sx+(nx-sx)*k0,sy+(ny-sy)*k0,nx-(nx-sx)*k1,ny-(ny-sy)*k1];E(g,'path',{d:`M${seg[0].toFixed(1)} ${seg[1].toFixed(1)}L${seg[2].toFixed(1)} ${seg[3].toFixed(1)}`,stroke:'var(--mute)','stroke-width':.8});obst.push({seg});}}
       obst.push(r);
-      return E(g,'text',{x:tx.toFixed(1),y:ty.toFixed(1),'text-anchor':a,'font-size':fs,'letter-spacing':ls||null,fill:o.fill||'var(--body)'},txt);}
+      return E(g,'text',{x:tx.toFixed(1),y:ty.toFixed(1),'text-anchor':a,'font-size':fs,'letter-spacing':ls||null,'font-weight':o.weight||null,fill:o.fill||'var(--body)'},txt);}
     return null;}
   // A label that must sit at one of a few given centres (state names)
-  function labelAt(g,txt,pts,obst,bd,o={}){const fs=o.fs||FS,ls=o.ls||0,w=txt.length*(fs*.6+ls);
+  function labelAt(g,txt,pts,obst,bd,o={}){const fs=o.fs||CITY,ls=o.ls||0,w=txt.length*(fs*.6+ls);
     for(const [x,y] of pts){const r={x0:x-w/2,y0:y-fs,x1:x+w/2,y1:y+fs*.5};
       if(r.x0<bd.x0||r.x1>bd.x1||r.y0<bd.y0||r.y1>bd.y1||obst.some(b=>hit(r,b)))continue;
-      obst.push(r);return E(g,'text',{x:x.toFixed(1),y:y.toFixed(1),'text-anchor':'middle','font-size':fs,'letter-spacing':ls||null,fill:o.fill||'var(--mute)'},txt);}
+      obst.push(r);return E(g,'text',{x:x.toFixed(1),y:y.toFixed(1),'text-anchor':'middle','font-size':fs,'letter-spacing':ls||null,'font-weight':o.weight||null,fill:o.fill||'var(--mute)'},txt);}
     return null;}
-  // dots never overlap each other or a label: each walks a sunflower spiral out from its true position until it finds room;
-  // ten or more reports at one spot become one numbered circle. City markers (m) and connector lines may sit under a dot.
-  function placeDots(g,rows,P,obst,bd){const placed=[],free=obst.filter(b=>!b.m&&!b.seg),groups=[];let clusters=0;
-    const fits=(x,y,rad)=>x-rad>=bd.x0&&x+rad<=bd.x1&&y-rad>=bd.y0&&y+rad<=bd.y1&&placed.every(p=>Math.hypot(p.x-x,p.y-y)>=p.rad+rad+2)&&!free.some(b=>hit(box(x,y,rad+1),b));
-    const put=(tx,ty,rad)=>{for(let i=0;i<900;i++){const a=i*2.39996,d=Math.sqrt(i)*(rad+1.2)*.8,x=tx+d*Math.cos(a),y=ty+d*Math.sin(a);if(fits(x,y,rad)){placed.push({x,y,rad});return{x,y};}}placed.push({x:tx,y:ty,rad});return{x:tx,y:ty};};
+  // Dots sit on land, never on each other or a region label: each walks a sunflower spiral out from its true position until it
+  // finds room. Ten or more reports at one spot become one numbered circle. Placed dots become obstacles for the city labels.
+  function placeDots(g,rows,P,obst,bd,land){const placed=[],free=obst.filter(b=>!b.m&&!b.seg),groups=[];let clusters=0;
+    const onLand=(x,y,r)=>land(x,y)&&[[1,0],[-1,0],[0,1],[0,-1]].every(([dx,dy])=>land(x+dx*r*.7,y+dy*r*.7));
+    const fits=(x,y,rad)=>x-rad>=bd.x0&&x+rad<=bd.x1&&y-rad>=bd.y0&&y+rad<=bd.y1&&onLand(x,y,rad)&&placed.every(p=>Math.hypot(p.x-x,p.y-y)>=p.rad+rad+2)&&!free.some(b=>hit(box(x,y,rad+1),b));
+    const put=(tx,ty,rad)=>{let c={x:tx,y:ty};for(let i=0;i<1500;i++){const a=i*2.39996,d=Math.sqrt(i)*(rad+1.2)*.8,x=tx+d*Math.cos(a),y=ty+d*Math.sin(a);if(fits(x,y,rad)){c={x,y};break;}}
+      placed.push({x:c.x,y:c.y,rad});obst.push(box(c.x,c.y,rad+1.5));return c;};
     rows.slice().sort((a,b)=>((b.deaths>0)-(a.deaths>0))||(b.date||'').localeCompare(a.date||'')).forEach(r=>{const x=P.x(r.lon),y=P.y(r.lat),q=groups.find(q=>Math.hypot(q.x-x,q.y-y)<16);q?q.rows.push(r):groups.push({x,y,rows:[r]});});
     groups.sort((a,b)=>b.rows.length-a.rows.length).forEach(q=>{
       if(q.rows.length>=10){const rad=9+1.6*Math.sqrt(q.rows.length),c=put(q.x,q.y,rad);cluster(g,q.rows,c.x,c.y,rad);clusters++;return;}
-      q.rows.forEach(r=>{const rad=typeof r.deaths==='number'&&r.deaths>0?6.5:5,c=put(P.x(r.lon),P.y(r.lat),rad);dot(g,r,c.x,c.y,rad);});});
+      q.rows.forEach(r=>{const rad=typeof r.deaths==='number'&&r.deaths>0?6.5:5,ring=isNew(r)?4:0,c=put(P.x(r.lon),P.y(r.lat),rad+ring);dot(g,r,c.x,c.y,rad);});});
     return clusters;}
   function cluster(g,rows,x,y,rad){const sorted=rows.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
     const el=E(g,'g',{tabindex:0,role:'button','data-cluster':1,'aria-label':`${rows.length} reports near ${sorted[0].place}`});
     E(el,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:rad.toFixed(1),fill:'var(--ink)',stroke:'var(--water)','stroke-width':1.5});
-    E(el,'text',{x:x.toFixed(1),y:(y+FS*.35).toFixed(1),'text-anchor':'middle','font-size':FS,'font-weight':500,fill:'var(--bg)'},rows.length);
+    E(el,'text',{x:x.toFixed(1),y:(y+11.5*.35).toFixed(1),'text-anchor':'middle','font-size':11.5,'font-weight':500,fill:'var(--bg)'},rows.length);
     E(el,'title',{},`${rows.length} reports near ${sorted[0].place}`);hook(el,sorted);}
   function scaleBar(g,x,y,km,P,obst,anchor){const L=P.km(km),x0=anchor==='end'?x-L:x;
     E(g,'path',{d:`M${x0} ${y-4}v4h${L}v-4`,fill:'none',stroke:'var(--ink)','stroke-width':1.2});
-    E(g,'text',{x:x0+L/2,y:y-8,'text-anchor':'middle','font-size':10.5,fill:'var(--body)'},km+' km');
-    obst.push({x0:x0-2,y0:y-8-10.5,x1:x0+L+2,y1:y+2});}
+    E(g,'text',{x:x0+L/2,y:y-8,'text-anchor':'middle','font-size':10,fill:'var(--body)'},km+' km');
+    obst.push({x0:x0-2,y0:y-8-10,x1:x0+L+2,y1:y+2});}
 
   // California + Nevada on the left (on top on phones), the Bay Area inset on the right (below on phones), joined by two connector lines
   function drawMap(rows){
-    const svg=$('map'),W=Math.max(260,Math.round(svg.getBoundingClientRect().width||540)),side=W>=500,gap=side?24:28;
-    const wi=side?(W-gap)*.56:W,wo=side?W-gap-wi:W,PO=proj(OV,wo),PI=proj(IN,wi);
+    const svg=$('map'),W=Math.max(260,Math.round(svg.getBoundingClientRect().width||640)),side=W>=500,gap=side?28:30;
+    const wi=side?(W-gap)*.52:W,wo=side?W-gap-wi:W,PO=proj(OV,wo),PI=proj(IN,wi);
     const Ht=side?Math.max(PO.h,PI.h):PO.h+gap+PI.h,oy=side?(Ht-PO.h)/2:0,ix=side?wo+gap:0,iy=side?0:PO.h+gap;
     svg.setAttribute('viewBox',`0 0 ${W} ${Math.ceil(Ht)}`);svg.replaceChildren();
     const cp=E(E(svg,'defs',{}),'clipPath',{id:'inclip'});E(cp,'rect',{width:wi,height:PI.h});
     const go=E(svg,'g',{transform:`translate(0 ${oy.toFixed(1)})`}),gi=E(svg,'g',{transform:`translate(${ix.toFixed(1)} ${iy.toFixed(1)})`});
-    const oo=[],bo={x0:2,y0:2,x1:wo-2,y1:PO.h-2},LS=1.5,caps={fs:11,ls:LS,fill:'var(--ink)'};
+    const oo=[],bo={x0:2,y0:2,x1:wo-2,y1:PO.h-2};
     poly(go,CA,PO,{fill:'var(--land)',stroke:'var(--landline)','stroke-width':1.2});poly(go,NV,PO,{fill:'var(--land)',stroke:'var(--landline)','stroke-width':1.2});
+    const caP=projPts(CA,PO),nvP=projPts(NV,PO),landO=(x,y)=>inPoly(x,y,caP)||inPoly(x,y,nvP);
     const bx0=PO.x(IN.lonA),by0=PO.y(IN.latA),bx1=PO.x(IN.lonB),by1=PO.y(IN.latB);
     // connectors from the box's corners to the inset's near corners (in overview coordinates)
     const C=side?[[bx1,by0,ix,-oy],[bx1,by1,ix,PI.h-oy]]:[[bx0,by1,0,iy],[bx1,by1,wi,iy]];
@@ -393,37 +396,39 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
     E(go,'rect',{x:bx0.toFixed(1),y:by0.toFixed(1),width:(bx1-bx0).toFixed(1),height:(by1-by0).toFixed(1),fill:'none',stroke:'var(--ink)','stroke-width':1.2});
     oo.push({x0:bx0-1,y0:by0-1,x1:bx1+1,y1:by1+1});
     scaleBar(go,8,PO.h-6,100,PO,oo);
-    OVC.forEach(([,la,lo])=>{const x=PO.x(lo),y=PO.y(la);E(go,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:2.5,fill:'var(--mute)'});oo.push(Object.assign(box(x,y,3),{m:1}));});
-    label(go,'BAY AREA',(bx0+bx1)/2,(by0+by1)/2,oo,bo,Object.assign({hw:(bx1-bx0)/2,hh:(by1-by0)/2,order:['u','ul','ur','dn'],dists:[5,10,16,24,34,46],dirFirst:true},caps));
-    labelAt(go,'CALIFORNIA',[[36.75,-119.3],[40.3,-122.1],[35.3,-118.4],[38.6,-120.9]].map(([la,lo])=>[PO.x(lo),PO.y(la)]),oo,bo,{fs:11,ls:LS});
-    labelAt(go,'NEVADA',[[39.1,-116.9],[38.0,-116.0],[40.7,-116.4],[37.2,-115.3]].map(([la,lo])=>[PO.x(lo),PO.y(la)]),oo,bo,{fs:11,ls:LS});
+    OVC.forEach(([,la,lo])=>{const x=PO.x(lo),y=PO.y(la);E(go,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:2.2,fill:'var(--mute)'});oo.push(Object.assign(box(x,y,3),{m:1}));});
+    label(go,'BAY AREA',(bx0+bx1)/2,(by0+by1)/2,oo,bo,Object.assign({hw:(bx1-bx0)/2,hh:(by1-by0)/2,order:['u','ul','ur','dn'],dists:[5,10,16,24,34,46],dirFirst:true},REGION));
+    labelAt(go,'CALIFORNIA',[[36.75,-119.3],[40.3,-122.1],[35.3,-118.4],[38.6,-120.9]].map(([la,lo])=>[PO.x(lo),PO.y(la)]),oo,bo,REGION);
+    labelAt(go,'NEVADA',[[39.1,-116.9],[38.0,-116.0],[40.7,-116.4],[37.2,-115.3]].map(([la,lo])=>[PO.x(lo),PO.y(la)]),oo,bo,REGION);
+    let clusters=placeDots(go,rows.filter(r=>onMap(r)&&!inBox(IN,r.lat,r.lon)),PO,oo,bo,landO);
     OVC.forEach(([n,la,lo])=>label(go,n,PO.x(lo),PO.y(la),oo,bo));
-    let clusters=placeDots(go,rows.filter(r=>onMap(r)&&!inBox(IN,r.lat,r.lon)),PO,oo,bo);
     // Bay Area inset: ocean, land, then the bay on top; square corners so the connectors meet them
     const oi=[],bi={x0:5,y0:5,x1:wi-5,y1:PI.h-5},gc=E(gi,'g',{'clip-path':'url(#inclip)'}),m=.05;
+    const landPts=[[IN.latA+m,IN.lonA-m],[COAST[0][0],IN.lonA-m],...COAST,[IN.latB-m,COAST.at(-1)[1]],[IN.latB-m,IN.lonB+m],[IN.latA+m,IN.lonB+m]];
     E(gc,'rect',{width:wi,height:PI.h,fill:'var(--water)'});
-    poly(gc,[[IN.latA+m,IN.lonA-m],[COAST[0][0],IN.lonA-m],...COAST,[IN.latB-m,COAST.at(-1)[1]],[IN.latB-m,IN.lonB+m],[IN.latA+m,IN.lonB+m]],PI,{fill:'var(--land)',stroke:'var(--landline)','stroke-width':1});
+    poly(gc,landPts,PI,{fill:'var(--land)',stroke:'var(--landline)','stroke-width':1});
     poly(gc,BAY,PI,{fill:'var(--water)',stroke:'var(--landline)','stroke-width':1});
+    const lP=projPts(landPts,PI),bP=projPts(BAY,PI),landI=(x,y)=>inPoly(x,y,lP)&&!inPoly(x,y,bP);
     E(gi,'rect',{width:wi,height:PI.h,fill:'none',stroke:'var(--ink)','stroke-width':1.2});
-    labelAt(gi,'BAY AREA',[[wi/2,22]],oi,{x0:0,y0:0,x1:wi,y1:PI.h},caps);
+    labelAt(gi,'BAY AREA',[[wi/2,22]],oi,{x0:0,y0:0,x1:wi,y1:PI.h},REGION);
     scaleBar(gi,wi-12,PI.h-10,10,PI,oi,'end');
-    INC.forEach(([,la,lo])=>{const x=PI.x(lo),y=PI.y(la);E(gi,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:2.5,fill:'var(--mute)'});oi.push(Object.assign(box(x,y,3),{m:1}));});
+    INC.forEach(([,la,lo])=>{const x=PI.x(lo),y=PI.y(la);E(gi,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:2.2,fill:'var(--mute)'});oi.push(Object.assign(box(x,y,3),{m:1}));});
+    clusters+=placeDots(gi,rows.filter(r=>onMap(r)&&inBox(IN,r.lat,r.lon)),PI,oi,bi,landI);
     INC.forEach(([n,la,lo])=>label(gi,n,PI.x(lo),PI.y(la),oi,bi));
-    clusters+=placeDots(gi,rows.filter(r=>onMap(r)&&inBox(IN,r.lat,r.lon)),PI,oi,bi);
     $('lg-cluster').hidden=!clusters;
   }
 
   function drawOff(rows){const el=$('offmap');el.replaceChildren();const off=rows.filter(r=>!onMap(r));el.hidden=!off.length;if(!off.length)return;
-    el.appendChild(H('div','eyebrow','Statewide, national and other states'));
-    off.slice(0,6).forEach(r=>{const b=H('button','om');b.type='button';
-      const t=H('span',null,r.title+' ');t.appendChild(H('span','p','· '+r.place));
+    el.appendChild(H('h3',null,'Statewide and national'));
+    off.slice(0,5).forEach(r=>{const b=H('button','om');b.type='button';
+      const t=H('span');t.append(H('span','t',r.title),H('span','p',r.place));
       b.append(H('i','dot c-'+clsOf(r)),H('span','d',fmtDate(r)),t);b.setAttribute('aria-label',`${fmtDate(r)}: ${r.title}, ${r.place}. Source: ${r.source}`);hook(b,[r]);el.appendChild(b);});
-    if(off.length>6){const n=H('div','note',`${off.length-6} more in the list below`);n.style.padding='4px 8px';el.appendChild(n);}}
+    if(off.length>5)el.appendChild(H('p','note',`${off.length-5} more in the list below`));}
 
   // ---- timeline: dot stacks per month from Jan 2025 (older reports in one "older" column); drag to pick months
   let TL=null;
   function drawTimeline(rows,win){
-    const t=$('timeline'),W=Math.max(260,Math.round(t.getBoundingClientRect().width||500)),L=34,R=8,fs=11;
+    const t=$('timeline'),W=Math.max(260,Math.round(t.getBoundingClientRect().width||440)),L=34,R=8,fs=11;
     const dated=rows.filter(r=>/^\d{4}-\d\d/.test(r.date||'')).map(r=>({r,i:Math.max(-1,mi(r.date))}));
     const early=dated.some(o=>o.i<0);
     const months=Math.max(23,(NOW.getFullYear()-2025)*12+NOW.getMonth(),...dated.map(o=>o.i))+1;
@@ -432,7 +437,6 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
     dated.forEach(o=>cnt[o.i]=(cnt[o.i]||0)+1);
     const maxS=Math.max(4,...Object.values(cnt)),top=30,B=top+maxS*pitch+4,Ht=B+58;
     t.setAttribute('viewBox',`0 0 ${W} ${Math.ceil(Ht)}`);t.replaceChildren();
-    // the selected window as a band behind everything
     const band=E(t,'rect',{x:0,y:top-6,width:0,height:B-top+6,fill:'var(--yelt)',rx:4});
     const showBand=(a,b)=>{if(a==null){band.setAttribute('width',0);return;}const xa=a<0?L:X(a)-colW/2,xb=b<0?L+bw-4:X(b)+colW/2;band.setAttribute('x',xa.toFixed(1));band.setAttribute('width',Math.max(0,xb-xa).toFixed(1));};
     if(win){const a=win.from<'2025-01'?-1:Math.min(months-1,mi(win.from)),b=win.to<'2025-01'?-1:Math.min(months-1,mi(win.to.slice(0,7)>ym(months-1)?ym(months-1):win.to));
@@ -449,10 +453,9 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
     if(early){E(t,'text',{x:X(-1).toFixed(1),y:B+18,'text-anchor':'middle','font-size':fs,fill:'var(--mute)'},'older');
       E(t,'path',{d:`M${(x0-2).toFixed(1)} ${top-6}V${B}`,stroke:'var(--rule)','stroke-width':1,'stroke-dasharray':'3 3'});}
     E(t,'text',{x:W-R,y:B+50,'text-anchor':'end','font-size':fs,fill:'var(--body)'},'month of report');
-    // drag surface under the dots
     const surf=E(t,'rect',{x:x0,y:top-6,width:W-R-x0,height:B-top+10,fill:'transparent'});surf.style.cursor='col-resize';
     const stack={};dated.sort((a,b)=>a.r.date<b.r.date?-1:1).forEach(({r,i})=>{stack[i]=(stack[i]||0)+1;
-      dot(t,r,X(i),B-2-rad-(stack[i]-1)*pitch,rad,win&&!inWindow(r,win));});
+      dot(t,r,X(i),B-2-rad-(stack[i]-1)*pitch,rad,win&&!inWindow(r,win),true);});   // the new-this-week ring lives on the map
     TL={t,x0,colW,months,showBand};
   }
   (function brush(){const t=$('timeline');let a=null;
@@ -460,7 +463,7 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
     t.addEventListener('pointerdown',e=>{if(!TL||e.target.closest('[data-pop]')||e.button>0)return;a=idx(e);t.setPointerCapture(e.pointerId);TL.showBand(a,a);closePop();});
     t.addEventListener('pointermove',e=>{if(a==null)return;const b=idx(e);TL.showBand(Math.min(a,b),Math.max(a,b));});
     const end=e=>{if(a==null)return;const b=idx(e),lo=Math.min(a,b),hi=Math.max(a,b);a=null;
-      state.when={k:'custom',from:ym(lo),to:ym(hi)};buildWhen();render();};
+      state.when={k:'custom',from:ym(lo),to:ym(hi)};syncWhen();render();};
     t.addEventListener('pointerup',end);t.addEventListener('pointercancel',()=>{a=null;render();});})();
 
   // ---- official trend: one small chart per place, drawn at its true pixel width
@@ -469,22 +472,21 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
   const ago=s=>{const [k,v]=s.points.at(-1),y=Number(k.slice(0,4))-1,p=s.points.find(q=>q[0]===`${y}${k.slice(4)}`);return{k,v,k0:p&&p[0],v0:p&&p[1],pct:p?(v-p[1])/p[1]:null};};
   function drawTrend(){const tr=state.trend;if(!tr)return;const grid=$('tgrid');
     const dom={a:'2020-01',b:tr.series.map(s=>s.points.at(-1)[0]).sort().at(-1)};
-    if(!grid.childElementCount)tr.series.forEach(s=>{const c=ago(s),art=H('article','tchart'),head=H('h3',null,s.name);
+    if(!grid.childElementCount)tr.series.forEach(s=>{const c=ago(s),art=H('article','tchart');
       const flat=c.pct!=null&&Math.abs(c.pct)<=.03,pct=c.pct==null?'':`${c.pct<0?'−':'+'}${Math.abs(Math.round(c.pct*100))}%`;
-      const ch=H('div','chg'+(c.pct>.03?' up':''),c.pct==null?'no year-earlier count':flat?`About flat (${pct}) in a year`:`${pct} in a year`);
-      const now=H('div','now'),l1=H('span');l1.append(H('b',null,c.v.toLocaleString('en-US')),` deaths, 12 months to ${monthName(c.k)}`);now.appendChild(l1);
-      if(c.v0!=null)now.appendChild(H('span',null,`${c.v0.toLocaleString('en-US')} in the 12 months a year earlier`));
-      const svg=E(art,'svg',{role:'img','aria-label':`${s.name}: ${c.v} overdose deaths in the 12 months to ${monthName(c.k)}${c.v0!=null?`, ${c.v0} a year earlier`:''}.`});
-      const cite=H('div','cite','Source: ');const a=H('a',null,(s.key==='sf'?'SF Medical Examiner':s.level==='county'?'CDC county counts':'CDC NCHS')+' ↗');
+      const ch=H('p','chg'+(c.pct>.03?' up':''),pct);ch.appendChild(H('span',null,c.pct==null?'no earlier count':flat?'about flat in a year':'in a year'));
+      const now=H('p','now');now.append(H('b',null,c.v.toLocaleString('en-US')),` deaths in the 12 months to ${monthName(c.k)}`);
+      const svg=E(art,'svg',{role:'img','aria-label':`${s.name}: ${c.v} overdose deaths in the 12 months to ${monthName(c.k)}${c.v0!=null?`, against ${c.v0} a year earlier`:''}.`});
+      const cite=H('p','cite','Source: ');const a=H('a',null,(s.key==='sf'?'SF Medical Examiner':s.level==='county'?'CDC county counts':'CDC NCHS')+' ↗');
       a.href=s.url;a.target='_blank';a.rel='noopener';a.title=s.source;cite.appendChild(a);
-      art.replaceChildren(head,ch,now,svg,cite);art.dataset.key=s.key;grid.appendChild(art);});
+      art.replaceChildren(H('h3',null,s.name),ch,now,svg,cite);art.dataset.key=s.key;grid.appendChild(art);});
     [...grid.children].forEach(art=>chart(art.querySelector('svg'),tr.series.find(s=>s.key===art.dataset.key),dom));}
   function chart(svg,s,dom){
-    const W=Math.max(220,Math.round(svg.getBoundingClientRect().width||320)),Ht=176,L=40,R=10,T=30,B=132,fs=11;
+    const W=Math.max(220,Math.round(svg.getBoundingClientRect().width||320)),Ht=150,L=40,R=10,T=26,B=124,fs=11;
     const xi=k=>(Number(k.slice(0,4))-Number(dom.a.slice(0,4)))*12+Number(k.slice(5,7))-Number(dom.a.slice(5,7)),n=xi(dom.b);
     const X=k=>L+(W-L-R)*xi(k)/n,top=nice(Math.max(...s.points.map(p=>p[1]))),Y=v=>B-(B-T)*v/top;
     svg.setAttribute('viewBox',`0 0 ${W} ${Ht}`);svg.replaceChildren();
-    E(svg,'text',{x:0,y:12,'font-size':fs,fill:'var(--body)'},'deaths, 12-month total');
+    E(svg,'text',{x:L,y:12,'font-size':fs,fill:'var(--mute)'},'deaths');   // the y unit, once, above the axis
     [top/2,top].forEach(v=>E(svg,'path',{d:`M${L} ${Y(v).toFixed(1)}H${W-R}`,stroke:'var(--rule)','stroke-width':1}));
     [0,top/2,top].forEach(v=>E(svg,'text',{x:L-6,y:(Y(v)+fs*.35).toFixed(1),'text-anchor':'end','font-size':fs,fill:'var(--mute)'},fmtN(v)));
     const pts=s.points.filter(p=>p[0]>=dom.a),d=pts.map(([k,v],i)=>(i?'L':'M')+X(k).toFixed(1)+' '+Y(v).toFixed(1)).join('');
@@ -495,11 +497,10 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
     for(let y=y0;y<=y1;y++){if(y>y0)E(svg,'path',{d:`M${X(`${y}-01`).toFixed(1)} ${B}v5`,stroke:'var(--ink)','stroke-width':1});
       const a=`${y}-01`<dom.a?dom.a:`${y}-01`,b=`${y}-12`>dom.b?dom.b:`${y}-12`,x=(X(a)+X(b))/2;
       if(x-lw/2<L-2||x+lw/2>W-R+2||x-last<lw+6)continue;last=x;
-      E(svg,'text',{x:x.toFixed(1),y:B+16,'text-anchor':'middle','font-size':fs,fill:'var(--mute)'},y);}
-    E(svg,'text',{x:W-R,y:Ht-6,'text-anchor':'end','font-size':fs,fill:'var(--body)'},'month the 12 months end');
+      E(svg,'text',{x:x.toFixed(1),y:B+17,'text-anchor':'middle','font-size':fs,fill:'var(--mute)'},y);}
     const c=ago(s);
-    if(c.k0)E(svg,'circle',{cx:X(c.k0).toFixed(1),cy:Y(c.v0).toFixed(1),r:4,fill:'var(--well)',stroke:'var(--ink)','stroke-width':1.5});
-    E(svg,'circle',{cx:X(c.k).toFixed(1),cy:Y(c.v).toFixed(1),r:4.5,fill:'var(--red)',stroke:'var(--well)','stroke-width':1.5});
+    if(c.k0)E(svg,'circle',{cx:X(c.k0).toFixed(1),cy:Y(c.v0).toFixed(1),r:4,fill:'var(--bg)',stroke:'var(--ink)','stroke-width':1.5});
+    E(svg,'circle',{cx:X(c.k).toFixed(1),cy:Y(c.v).toFixed(1),r:4.5,fill:'var(--red)',stroke:'var(--bg)','stroke-width':1.5});
   }
   function answer(){const tr=state.trend;if(!tr)return;const cs=tr.series.map(s=>({s,c:ago(s)})).filter(o=>o.c.pct!=null);
     const down=cs.filter(o=>o.c.pct<-.03),flat=cs.filter(o=>Math.abs(o.c.pct)<=.03),up=cs.filter(o=>o.c.pct>.03);
@@ -512,23 +513,27 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
 
   // ---- render the reports
   function render(){
-    closePop();const b=base(),win=windowOf(state.when),shown=b.filter(r=>inWindow(r,win)),all=state.rows,now=Date.now();
-    $('stats').textContent=`${all.length} reports · ${all.filter(r=>r.region==='Bay Area').length} in the Bay Area · ${all.filter(r=>now-Date.parse(r.date)<90*864e5).length} from the past 90 days · ${new Set(all.flatMap(r=>r.subs||[]).filter(k=>k!=='all')).size} substances`;
-    $('showing').textContent=shown.length===all.length?`Showing all ${all.length} reports`:`Showing ${shown.length} of ${all.length} reports`;
+    closePop();const b=base(),win=windowOf(state.when),shown=b.filter(r=>inWindow(r,win)),all=state.rows;
+    $('stats').textContent=`${all.length} reports, ${all.filter(r=>r.region==='Bay Area').length} in the Bay Area`;
+    $('showing').textContent=shown.length===all.length?`Showing all ${all.length}`:`Showing ${shown.length} of ${all.length}`;
+    $('lg-new').hidden=!shown.some(isNew);
     drawMap(shown);drawOff(shown);drawTimeline(b,win);
     const list=$('list');list.replaceChildren();
-    if(!shown.length){list.appendChild(H('div','empty',all.length?'No reports match these filters.':'No reports yet.'));return;}
-    shown.forEach(r=>{const it=H('article','item');it.id='it-'+r.id;
-      const w=H('div','when');w.append(H('b',null,fmtDate(r)),r.region||'');
-      const mid=H('div'),meta=H('div','meta'),tag=(t,c)=>meta.appendChild(H('span','tag'+(c?' '+c:''),t));
-      tag(r.kind);tag(r.place);
-      (r.subs||[]).forEach(k=>{const s=SUB[k];if(s)tag(s.label+(s.narcan==='no'?' · Narcan won’t reverse':s.narcan?' · Narcan reverses':''),s.cls);});
-      if(r.molecules)tag(r.molecules);
-      mid.append(H('h3',null,r.title),H('p',null,r.summary||''),meta);
+    if(!shown.length){list.appendChild(H('p','meta',all.length?'No reports match these filters.':'No reports yet.')).style.padding='18px 0';$('more').hidden=true;return;}
+    const rows=state.showAll?shown:shown.slice(0,LIST);
+    rows.forEach(r=>{const it=H('article','item');it.id='it-'+r.id;
+      const w=H('div','when');w.append(H('b',null,fmtDate(r)),H('span',null,r.place),H('span',null,(r.kind[0].toUpperCase()+r.kind.slice(1)).replace('-',' ')));
+      if(isNew(r))w.appendChild(H('span','new','New'));
+      const mid=H('div'),tags=H('div','tags');
+      (r.subs||[]).forEach(k=>{const s=SUB[k];if(!s)return;const t=H('span','tag');t.append(H('i','dot c-'+s.cls),s.label);tags.appendChild(t);});
+      const named=(r.subs||[]).map(k=>SUB[k]&&SUB[k].label.toLowerCase());
+      if(r.molecules&&!named.includes(r.molecules.trim().toLowerCase()))tags.appendChild(H('span','mol',r.molecules));   // skip a molecule that only repeats its tag
+      mid.append(H('h3',null,r.title),H('p',null,r.summary||''),tags);
       const src=H('div','src');
       if(typeof r.deaths==='number'&&r.deaths>0)src.appendChild(H('span','dead',r.deaths+(r.deaths===1?' death':' deaths')));
       const a=H('a',null,(r.source||'source')+' ↗');a.href=r.url;a.target='_blank';a.rel='noopener';src.appendChild(a);
       it.append(w,mid,src);list.appendChild(it);});
+    const more=$('more');more.hidden=shown.length<=LIST;more.textContent=state.showAll?'Show the latest only':`Show all ${shown.length} reports`;
   }
   // figures are drawn at their true pixel width, so redraw them when their containers change width
   let lastW='';new ResizeObserver(()=>{const w=[$('map'),$('timeline'),$('tgrid')].map(e=>Math.round(e.getBoundingClientRect().width)).join();
@@ -538,10 +543,10 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
   const get=u=>fetch(u,{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(u+' '+r.status);return r.json();});
   Promise.all([get('data/incidents.json'),get('data/trend.json')]).then(([inc,tr])=>{
     state.rows=inc.incidents.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));state.trend=tr;
-    const d=s=>{const [y,m,dd]=s.split('-');return `${MON[m-1]} ${+dd}, ${y}`;};
-    $('updated').textContent=`Reports updated ${d(inc.updated)} · official counts fetched ${d(tr.generated)}`;
-    buildWhen();answer();drawTrend();render();
-  }).catch(e=>{$('updated').textContent='Could not load the data. Please reload.';$('answer').textContent='';$('list').replaceChildren(H('div','empty','Could not load the reports ('+e.message+').'));});
+    const last=[inc.updated,tr.generated].sort().at(-1),[y,m,dd]=last.split('-');
+    $('updated').textContent=`Last updated ${MON[m-1]} ${+dd}, ${y}`;
+    answer();drawTrend();render();
+  }).catch(e=>{$('updated').textContent='Could not load the data. Please reload.';$('answer').textContent='';$('list').replaceChildren(H('p','meta','Could not load the reports ('+e.message+').'));});
 })();
 </script>
 </body>
