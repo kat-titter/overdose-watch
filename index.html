@@ -325,22 +325,39 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
   const poly=(g,pts,P,a)=>E(g,'path',Object.assign({d:'M'+pts.map(([la,lo])=>P.x(lo).toFixed(1)+' '+P.y(la).toFixed(1)).join('L')+'Z','stroke-linejoin':'round'},a));
 
   // DM Mono: advance 0.6 em; its text box runs 1.0 em above the baseline and 0.5 em below.
-  const FS=11.5,hit=(a,b)=>a.x0<b.x1&&b.x0<a.x1&&a.y0<b.y1&&b.y0<a.y1;
-  const box=(x,y,r)=>({x0:x-r,y0:y-r,x1:x+r,y1:y+r});
+  // Obstacles are boxes {x0,y0,x1,y1} (m: a city marker a dot may cover) or line segments {seg:[x1,y1,x2,y2]} that text must not cross.
+  const FS=11.5,box=(x,y,r)=>({x0:x-r,y0:y-r,x1:x+r,y1:y+r});
+  const segHit=(r,[x1,y1,x2,y2])=>{let t0=0,t1=1;const dx=x2-x1,dy=y2-y1;   // Liang-Barsky clip of the segment against the box
+    for(const [p,q] of [[-dx,x1-r.x0],[dx,r.x1-x1],[-dy,y1-r.y0],[dy,r.y1-y1]]){
+      if(p===0){if(q<0)return false;}else{const t=q/p;if(p<0){if(t>t1)return false;if(t>t0)t0=t;}else{if(t<t0)return false;if(t<t1)t1=t;}}}
+    return true;};
+  const hit=(a,b)=>b.seg?segHit({x0:a.x0-2,y0:a.y0-2,x1:a.x1+2,y1:a.y1+2},b.seg):a.x0<b.x1&&b.x0<a.x1&&a.y0<b.y1&&b.y0<a.y1;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  // Try spots around an anchor (a point, or a box of half-size hw x hh) at growing distances; past 10 px a thin leader ties label to anchor.
   function label(g,txt,x,y,obst,bd,o={}){
     const fs=o.fs||FS,ls=o.ls||0,w=txt.length*(fs*.6+ls),hw=o.hw||0,hh=o.hh||0;
-    for(const d of [5,10,16,24,34]){const s=d*.7;
-      for(const [a,tx,ty] of [['start',x+hw+d,y+fs*.35],['end',x-hw-d,y+fs*.35],['middle',x,y-hh-d-fs*.5],['middle',x,y+hh+d+fs],
-        ['start',x+hw+s,y-hh-s-fs*.5],['start',x+hw+s,y+hh+s+fs],['end',x-hw-s,y-hh-s-fs*.5],['end',x-hw-s,y+hh+s+fs]]){
-        const x0=a==='start'?tx:a==='end'?tx-w:tx-w/2,r={x0,y0:ty-fs,x1:x0+w,y1:ty+fs*.5};
-        if(r.x0<bd.x0||r.x1>bd.x1||r.y0<bd.y0||r.y1>bd.y1||obst.some(b=>hit(r,b)))continue;
-        obst.push(r);
-        if(d>=16)E(g,'path',{d:`M${x} ${y}L${Math.max(r.x0,Math.min(x,r.x1))} ${Math.max(r.y0+fs*.4,Math.min(y,r.y1-fs*.2))}`,stroke:'var(--mute)','stroke-width':.8});
-        return E(g,'text',{x:tx.toFixed(1),y:ty.toFixed(1),'text-anchor':a,'font-size':fs,'letter-spacing':ls||null,fill:o.fill||'var(--body)'},txt);}}
+    const at={r:d=>['start',x+hw+d,y+fs*.35],l:d=>['end',x-hw-d,y+fs*.35],u:d=>['middle',x,y-hh-d-fs*.5],dn:d=>['middle',x,y+hh+d+fs],
+      ur:d=>['start',x+hw+d*.7,y-hh-d*.7-fs*.5],dr:d=>['start',x+hw+d*.7,y+hh+d*.7+fs],ul:d=>['end',x-hw-d*.7,y-hh-d*.7-fs*.5],dl:d=>['end',x-hw-d*.7,y+hh+d*.7+fs]};
+    const D=o.dists||[5,10,16,24,34,46,60],K=o.order||['r','l','u','dn','ur','dr','ul','dl'];
+    const tries=o.dirFirst?K.flatMap(k=>D.map(d=>[k,d])):D.flatMap(d=>K.map(k=>[k,d]));   // nearest spot first, or preferred side first
+    for(const [k,d] of tries){
+      const [a,tx,ty]=at[k](d),x0=a==='start'?tx:a==='end'?tx-w:tx-w/2,r={x0,y0:ty-fs,x1:x0+w,y1:ty+fs*.5};
+      if(r.x0<bd.x0||r.x1>bd.x1||r.y0<bd.y0||r.y1>bd.y1||obst.some(b=>hit(r,b)))continue;
+      if(d>=10){const nx=clamp(x,r.x0,r.x1),ny=clamp(y,r.y0+fs*.3,r.y1-fs*.2),sx=hw?clamp(nx,x-hw,x+hw):x,sy=hh?clamp(ny,y-hh,y+hh):y;
+        const L=Math.hypot(nx-sx,ny-sy),k0=hw||hh?0:3.5/L,k1=2/L;   // start clear of the marker, stop short of the text
+        if(L>6){const seg=[sx+(nx-sx)*k0,sy+(ny-sy)*k0,nx-(nx-sx)*k1,ny-(ny-sy)*k1];E(g,'path',{d:`M${seg[0].toFixed(1)} ${seg[1].toFixed(1)}L${seg[2].toFixed(1)} ${seg[3].toFixed(1)}`,stroke:'var(--mute)','stroke-width':.8});obst.push({seg});}}
+      obst.push(r);
+      return E(g,'text',{x:tx.toFixed(1),y:ty.toFixed(1),'text-anchor':a,'font-size':fs,'letter-spacing':ls||null,fill:o.fill||'var(--body)'},txt);}
+    return null;}
+  // A label that must sit at one of a few given centres (state names)
+  function labelAt(g,txt,pts,obst,bd,o={}){const fs=o.fs||FS,ls=o.ls||0,w=txt.length*(fs*.6+ls);
+    for(const [x,y] of pts){const r={x0:x-w/2,y0:y-fs,x1:x+w/2,y1:y+fs*.5};
+      if(r.x0<bd.x0||r.x1>bd.x1||r.y0<bd.y0||r.y1>bd.y1||obst.some(b=>hit(r,b)))continue;
+      obst.push(r);return E(g,'text',{x:x.toFixed(1),y:y.toFixed(1),'text-anchor':'middle','font-size':fs,'letter-spacing':ls||null,fill:o.fill||'var(--mute)'},txt);}
     return null;}
   // dots never overlap each other or a label: each walks a sunflower spiral out from its true position until it finds room;
-  // ten or more reports at one spot become one numbered circle. City markers (m) may sit under a dot.
-  function placeDots(g,rows,P,obst,bd){const placed=[],free=obst.filter(b=>!b.m),groups=[];let clusters=0;
+  // ten or more reports at one spot become one numbered circle. City markers (m) and connector lines may sit under a dot.
+  function placeDots(g,rows,P,obst,bd){const placed=[],free=obst.filter(b=>!b.m&&!b.seg),groups=[];let clusters=0;
     const fits=(x,y,rad)=>x-rad>=bd.x0&&x+rad<=bd.x1&&y-rad>=bd.y0&&y+rad<=bd.y1&&placed.every(p=>Math.hypot(p.x-x,p.y-y)>=p.rad+rad+2)&&!free.some(b=>hit(box(x,y,rad+1),b));
     const put=(tx,ty,rad)=>{for(let i=0;i<900;i++){const a=i*2.39996,d=Math.sqrt(i)*(rad+1.2)*.8,x=tx+d*Math.cos(a),y=ty+d*Math.sin(a);if(fits(x,y,rad)){placed.push({x,y,rad});return{x,y};}}placed.push({x:tx,y:ty,rad});return{x:tx,y:ty};};
     rows.slice().sort((a,b)=>((b.deaths>0)-(a.deaths>0))||(b.date||'').localeCompare(a.date||'')).forEach(r=>{const x=P.x(r.lon),y=P.y(r.lat),q=groups.find(q=>Math.hypot(q.x-x,q.y-y)<16);q?q.rows.push(r):groups.push({x,y,rows:[r]});});
@@ -358,32 +375,37 @@ footer{border-top:1.5px solid var(--rule);padding-top:16px;display:flex;flex-dir
     E(g,'text',{x:x0+L/2,y:y-8,'text-anchor':'middle','font-size':10.5,fill:'var(--body)'},km+' km');
     obst.push({x0:x0-2,y0:y-8-10.5,x1:x0+L+2,y1:y+2});}
 
+  // California + Nevada on the left (on top on phones), the Bay Area inset on the right (below on phones), joined by two connector lines
   function drawMap(rows){
-    const svg=$('map'),W=Math.max(260,Math.round(svg.getBoundingClientRect().width||540)),side=W>=500,gap=18;
-    const wi=side?(W-gap)/2.09:W,wo=side?W-gap-wi:W,PO=proj(OV,wo),PI=proj(IN,wi);
-    const Ht=side?Math.max(PO.h,PI.h):PI.h+gap+PO.h;
+    const svg=$('map'),W=Math.max(260,Math.round(svg.getBoundingClientRect().width||540)),side=W>=500,gap=side?24:28;
+    const wi=side?(W-gap)*.56:W,wo=side?W-gap-wi:W,PO=proj(OV,wo),PI=proj(IN,wi);
+    const Ht=side?Math.max(PO.h,PI.h):PO.h+gap+PI.h,oy=side?(Ht-PO.h)/2:0,ix=side?wo+gap:0,iy=side?0:PO.h+gap;
     svg.setAttribute('viewBox',`0 0 ${W} ${Math.ceil(Ht)}`);svg.replaceChildren();
-    const cp=E(E(svg,'defs',{}),'clipPath',{id:'inclip'});E(cp,'rect',{width:wi,height:PI.h,rx:10});
-    const go=E(svg,'g',{transform:`translate(0 ${side?((Ht-PO.h)/2).toFixed(1):(PI.h+gap).toFixed(1)})`});
-    const gi=E(svg,'g',{transform:`translate(${side?(wo+gap).toFixed(1):0} 0)`});
-    const oo=[],bo={x0:2,y0:2,x1:wo-2,y1:PO.h-2};
+    const cp=E(E(svg,'defs',{}),'clipPath',{id:'inclip'});E(cp,'rect',{width:wi,height:PI.h});
+    const go=E(svg,'g',{transform:`translate(0 ${oy.toFixed(1)})`}),gi=E(svg,'g',{transform:`translate(${ix.toFixed(1)} ${iy.toFixed(1)})`});
+    const oo=[],bo={x0:2,y0:2,x1:wo-2,y1:PO.h-2},LS=1.5,caps={fs:11,ls:LS,fill:'var(--ink)'};
     poly(go,CA,PO,{fill:'var(--land)',stroke:'var(--landline)','stroke-width':1.2});poly(go,NV,PO,{fill:'var(--land)',stroke:'var(--landline)','stroke-width':1.2});
-    [['CALIFORNIA',36.75,-119.3],['NEVADA',39.1,-116.9]].forEach(([n,la,lo])=>{const fs=11,ls=1.5,w=n.length*(fs*.6+ls),x=PO.x(lo),y=PO.y(la);
-      E(go,'text',{x:x.toFixed(1),y:y.toFixed(1),'text-anchor':'middle','font-size':fs,'letter-spacing':ls,fill:'var(--mute)'},n);oo.push({x0:x-w/2,y0:y-fs,x1:x+w/2,y1:y+fs*.5});});
     const bx0=PO.x(IN.lonA),by0=PO.y(IN.latA),bx1=PO.x(IN.lonB),by1=PO.y(IN.latB);
+    // connectors from the box's corners to the inset's near corners (in overview coordinates)
+    const C=side?[[bx1,by0,ix,-oy],[bx1,by1,ix,PI.h-oy]]:[[bx0,by1,0,iy],[bx1,by1,wi,iy]];
+    E(go,'path',{d:C.map(c=>`M${c[0].toFixed(1)} ${c[1].toFixed(1)}L${c[2].toFixed(1)} ${c[3].toFixed(1)}`).join(''),stroke:'var(--mute)','stroke-width':1,fill:'none'});
+    C.forEach(seg=>oo.push({seg}));
     E(go,'rect',{x:bx0.toFixed(1),y:by0.toFixed(1),width:(bx1-bx0).toFixed(1),height:(by1-by0).toFixed(1),fill:'none',stroke:'var(--ink)','stroke-width':1.2});
     oo.push({x0:bx0-1,y0:by0-1,x1:bx1+1,y1:by1+1});
     scaleBar(go,8,PO.h-6,100,PO,oo);
     OVC.forEach(([,la,lo])=>{const x=PO.x(lo),y=PO.y(la);E(go,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:2.5,fill:'var(--mute)'});oo.push(Object.assign(box(x,y,3),{m:1}));});
+    label(go,'BAY AREA',(bx0+bx1)/2,(by0+by1)/2,oo,bo,Object.assign({hw:(bx1-bx0)/2,hh:(by1-by0)/2,order:['u','ul','ur','dn'],dists:[5,10,16,24,34,46],dirFirst:true},caps));
+    labelAt(go,'CALIFORNIA',[[36.75,-119.3],[40.3,-122.1],[35.3,-118.4],[38.6,-120.9]].map(([la,lo])=>[PO.x(lo),PO.y(la)]),oo,bo,{fs:11,ls:LS});
+    labelAt(go,'NEVADA',[[39.1,-116.9],[38.0,-116.0],[40.7,-116.4],[37.2,-115.3]].map(([la,lo])=>[PO.x(lo),PO.y(la)]),oo,bo,{fs:11,ls:LS});
     OVC.forEach(([n,la,lo])=>label(go,n,PO.x(lo),PO.y(la),oo,bo));
-    label(go,'Bay Area',(bx0+bx1)/2,(by0+by1)/2,oo,bo,{hw:(bx1-bx0)/2,hh:(by1-by0)/2,fill:'var(--ink)'});
     let clusters=placeDots(go,rows.filter(r=>onMap(r)&&!inBox(IN,r.lat,r.lon)),PO,oo,bo);
+    // Bay Area inset: ocean, land, then the bay on top; square corners so the connectors meet them
     const oi=[],bi={x0:5,y0:5,x1:wi-5,y1:PI.h-5},gc=E(gi,'g',{'clip-path':'url(#inclip)'}),m=.05;
     E(gc,'rect',{width:wi,height:PI.h,fill:'var(--water)'});
     poly(gc,[[IN.latA+m,IN.lonA-m],[COAST[0][0],IN.lonA-m],...COAST,[IN.latB-m,COAST.at(-1)[1]],[IN.latB-m,IN.lonB+m],[IN.latA+m,IN.lonB+m]],PI,{fill:'var(--land)',stroke:'var(--landline)','stroke-width':1});
     poly(gc,BAY,PI,{fill:'var(--water)',stroke:'var(--landline)','stroke-width':1});
-    E(gi,'rect',{width:wi,height:PI.h,rx:10,fill:'none',stroke:'var(--ink)','stroke-width':1.2});
-    E(gi,'text',{x:12,y:22,'font-size':11,'letter-spacing':1.5,fill:'var(--ink)'},'BAY AREA');oi.push({x0:8,y0:8,x1:12+8*8.1+4,y1:28});
+    E(gi,'rect',{width:wi,height:PI.h,fill:'none',stroke:'var(--ink)','stroke-width':1.2});
+    labelAt(gi,'BAY AREA',[[wi/2,22]],oi,{x0:0,y0:0,x1:wi,y1:PI.h},caps);
     scaleBar(gi,wi-12,PI.h-10,10,PI,oi,'end');
     INC.forEach(([,la,lo])=>{const x=PI.x(lo),y=PI.y(la);E(gi,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:2.5,fill:'var(--mute)'});oi.push(Object.assign(box(x,y,3),{m:1}));});
     INC.forEach(([n,la,lo])=>label(gi,n,PI.x(lo),PI.y(la),oi,bi));
