@@ -1,11 +1,11 @@
-"""Shared rules for data/incidents.json (used by validate.py and add_incidents.py)."""
+"""Shared rules for data/incidents.json (used by validate.py and add_incidents.py). Every report counts deaths."""
 import datetime, re
 
 REQUIRED = ["id", "date", "datePrec", "title", "place", "region", "geo", "lat", "lon", "kind", "subs", "molecules",
             "deaths", "summary", "source", "url", "added", "via"]
 ENUMS = {"datePrec": {"day", "month", "year"}, "region": {"Bay Area", "California", "Nevada", "US"},
          "geo": {"city", "county", "site", "region", "state", "nation"},
-         "kind": {"death", "cluster", "alert", "seizure", "drug-checking", "data", "policy", "response"}}
+         "kind": {"death", "cluster", "data"}}
 SUBS = {"fentanyl", "carfentanil", "cychlorphine", "nitazenes", "bromazolam", "medetomidine", "xylazine", "all"}
 
 
@@ -28,8 +28,8 @@ def problems(row):
         out.append(f"subs must be a non-empty list from {sorted(SUBS)}")
     if not (isinstance(row["lat"], (int, float)) and -90 <= row["lat"] <= 90 and isinstance(row["lon"], (int, float)) and -180 <= row["lon"] <= 180):
         out.append("lat/lon must be numbers")
-    if row["deaths"] is not None and not (isinstance(row["deaths"], int) and row["deaths"] >= 0):
-        out.append("deaths must be a whole number or null")
+    if not (isinstance(row["deaths"], int) and row["deaths"] >= 1):
+        out.append("deaths must be the death count the source states (a whole number, 1 or more)")
     if not (isinstance(row["url"], str) and row["url"].startswith(("https://", "http://"))):
         out.append("url must be the source link (every report needs a citation)")
     for k, n in (("title", 90), ("summary", 320), ("source", 80), ("place", 80)):

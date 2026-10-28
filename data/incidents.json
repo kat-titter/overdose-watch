@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-15",
+ "updated": "2026-10-27",
  "incidents": [
   {
    "id": "2026-09-sf-deaths-jan-aug",
@@ -13,6 +13,7 @@
    "lon": -122.43,
    "kind": "data",
    "subs": [
+    "all",
     "fentanyl"
    ],
    "molecules": "",
@@ -20,94 +21,6 @@
    "summary": "351 preliminary accidental overdose deaths January to August 2026, against 460 in the same months of 2025. Fentanyl was involved in 249 of the 351.",
    "source": "SF Office of the Chief Medical Examiner",
    "url": "https://media.api.sf.gov/documents/2026_09_OCME_Overdose_Report_TI7OSD2.pdf",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
-   "id": "2026-09-sf-cychlorphine-arrests",
-   "date": "2026-09-14",
-   "datePrec": "day",
-   "title": "Four arrested after the cychlorphine death",
-   "place": "San Francisco",
-   "region": "Bay Area",
-   "geo": "city",
-   "lat": 37.777,
-   "lon": -122.42,
-   "kind": "response",
-   "subs": [
-    "cychlorphine"
-   ],
-   "molecules": "cychlorphine",
-   "deaths": null,
-   "summary": "SFPD arrested four suspected dealers on Sept 8 and 9 and seized over 20,000 suspected counterfeit pills, in a probe that began with a 16-year-old's fatal overdose in April. The medical examiner found cychlorphine.",
-   "source": "San Francisco Police Department",
-   "url": "https://www.sanfranciscopolice.org/news/sfpd-arrests-4-dealers-seizes-over-20000-counterfeit-pills",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
-   "id": "2026-08-dea-cychlorphine-schedule",
-   "date": "2026-08-27",
-   "datePrec": "day",
-   "title": "DEA temporarily schedules cychlorphine and related orphines",
-   "place": "United States",
-   "region": "US",
-   "geo": "nation",
-   "lat": 38.87,
-   "lon": -77.05,
-   "kind": "policy",
-   "subs": [
-    "cychlorphine"
-   ],
-   "molecules": "cychlorphine (N-propionitrile chlorphine) and three other orphines",
-   "deaths": null,
-   "summary": "Cychlorphine and three related orphine opioids go into Schedule I from Aug 27, 2026, on a temporary two-year order.",
-   "source": "Federal Register (DEA)",
-   "url": "https://www.govinfo.gov/content/pkg/FR-2026-08-27/pdf/2026-17531.pdf",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
-   "id": "2026-08-oakland-fentanyl-lab",
-   "date": "2026-08-13",
-   "datePrec": "day",
-   "title": "3.8 kg of fentanyl seized at an Oakland mixing operation",
-   "place": "Oakland (78th Ave)",
-   "region": "Bay Area",
-   "geo": "city",
-   "lat": 37.755,
-   "lon": -122.18,
-   "kind": "seizure",
-   "subs": [
-    "fentanyl"
-   ],
-   "molecules": "fentanyl",
-   "deaths": null,
-   "summary": "A sheriff's task force searched two Oakland homes and found a fentanyl mixing and pressing operation in an accessory dwelling unit on 78th Ave. Over 3,800 g seized; five arrested.",
-   "source": "Alameda County Sheriff's Office",
-   "url": "https://www.facebook.com/ACSOSheriffs/posts/pfbid0HzZx29YW1zduiAaaHzTd2GpSYg6TKK3JHMgmoAncA6aphdDrqfwgRoq1wuJko55Pl",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
-   "id": "2026-08-reno-fentanyl-bust",
-   "date": "2026-08-04",
-   "datePrec": "day",
-   "title": "Reno bust: about 236,000 potentially lethal fentanyl doses",
-   "place": "Reno and Sparks",
-   "region": "Nevada",
-   "geo": "city",
-   "lat": 39.53,
-   "lon": -119.81,
-   "kind": "seizure",
-   "subs": [
-    "fentanyl"
-   ],
-   "molecules": "fentanyl",
-   "deaths": null,
-   "summary": "A multi-agency task force arrested a Stockton man after a months-long investigation.",
-   "source": "Reno Police Department",
-   "url": "https://www.reno.gov/articles/REGIONAL-NARCOTICS-UNIT-AND-NORTHERN-NEVADA-DRUG-TASK-FORCE-ARREST-STOCKTON-MAN-FOLLOWING-MAJOR-FENTANYL-INVESTIGATION-618.php",
    "added": "2026-10-15",
    "via": "seed"
   },
@@ -126,32 +39,10 @@
     "all"
    ],
    "molecules": "",
-   "deaths": null,
+   "deaths": 69973,
    "summary": "CDC provisional data: an estimated 69,973 overdose deaths in 2025, down almost 14% from 81,313 in 2024, the third straight yearly decline. Opioid-involved deaths fell from 55,296 to 44,564.",
    "source": "CDC NCHS",
    "url": "https://www.cdc.gov/nchs/pressroom/releases/20260513.html",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
-   "id": "2026-05-nevada-settlement",
-   "date": "2026-05-01",
-   "datePrec": "day",
-   "title": "Nevada to receive $57.9M from the Purdue/Sackler settlement",
-   "place": "Nevada",
-   "region": "Nevada",
-   "geo": "state",
-   "lat": 39.16,
-   "lon": -119.77,
-   "kind": "policy",
-   "subs": [
-    "all"
-   ],
-   "molecules": "",
-   "deaths": null,
-   "summary": "The money goes to the Fund for a Resilient Nevada; the state has secured over $1.2 billion in opioid settlements.",
-   "source": "Nevada Attorney General",
-   "url": "https://ag.nv.gov/News/PR/2026/Purdue/Sackler_$7_4_Billion_Opioid_Settlement_Goes_into_Effect/",
    "added": "2026-10-15",
    "via": "seed"
   },
@@ -174,28 +65,6 @@
    "summary": "White House drug policy office: most common in Ohio, Texas and Tennessee across 2025 and 2026.",
    "source": "White House ONDCP drug threat notice",
    "url": "https://www.whitehouse.gov/wp-content/uploads/2026/09/Drug-Threat-Cychlorohine-justified-1-1.pdf",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
-   "id": "2026-04-norcal-cychlorphine-pills",
-   "date": "2026-04-23",
-   "datePrec": "day",
-   "title": "DEA San Francisco warns of counterfeit pills with cychlorphine",
-   "place": "Northern California",
-   "region": "California",
-   "geo": "region",
-   "lat": 38.58,
-   "lon": -121.49,
-   "kind": "seizure",
-   "subs": [
-    "cychlorphine"
-   ],
-   "molecules": "cychlorphine in counterfeit pills",
-   "deaths": null,
-   "summary": "DEA's San Francisco Division said counterfeit pills containing cychlorphine had turned up in its region; early research suggests the opioid is more potent than fentanyl.",
-   "source": "DEA San Francisco Division",
-   "url": "https://x.com/DEASANFRANCISCO/status/2047438553119137998",
    "added": "2026-10-15",
    "via": "seed"
   },
@@ -246,28 +115,6 @@
    "via": "seed"
   },
   {
-   "id": "2026-04-cdc-medetomidine-han",
-   "date": "2026-04-02",
-   "datePrec": "day",
-   "title": "CDC health advisory on medetomidine",
-   "place": "United States",
-   "region": "US",
-   "geo": "nation",
-   "lat": 38.9,
-   "lon": -77.03,
-   "kind": "alert",
-   "subs": [
-    "medetomidine"
-   ],
-   "molecules": "medetomidine",
-   "deaths": null,
-   "summary": "Medetomidine is spreading in the illegal opioid supply, highest in the Northeast, with a severe withdrawal syndrome. Give naloxone to any suspected overdose; suspect medetomidine when sedation persists.",
-   "source": "CDC Health Alert Network",
-   "url": "https://www.cdc.gov/han/php/notices/han00527.html",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
    "id": "2026-04-ca-medetomidine-brief",
    "date": "2026-04-01",
    "datePrec": "month",
@@ -287,50 +134,6 @@
    "summary": "CDPH brief: all five deaths also involved fentanyl. Small amounts found in SF, San Diego, the Inland Empire and LA. Likely an undercount, since testing is limited.",
    "source": "CDPH",
    "url": "https://www.cdph.ca.gov/Programs/CCDPHP/sapb/CDPH%20Document%20Library/CDPHEmergingIssueBrief_Medetomidine.pdf",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
-   "id": "2026-03-midwest-cychlorphine",
-   "date": "2026-03-24",
-   "datePrec": "day",
-   "title": "Indianapolis-area sheriff warns of cychlorphine",
-   "place": "Marion County, Indiana",
-   "region": "US",
-   "geo": "county",
-   "lat": 39.77,
-   "lon": -86.16,
-   "kind": "alert",
-   "subs": [
-    "cychlorphine"
-   ],
-   "molecules": "cychlorphine",
-   "deaths": null,
-   "summary": "Sheriff alert: cychlorphine, linked to fatal overdoses in Ohio, Kentucky and Tennessee, will not show on fentanyl test strips, and one naloxone dose may not be enough.",
-   "source": "Marion County Sheriff's Office",
-   "url": "https://www.facebook.com/MarionCountySheriff/posts/pfbid027kiKJxKCgC5sg6aqE9WqFajhubRK5qwb1R8jbfqC1GnLAVLKAWmtPQDwndR53KQ8l",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
-   "id": "2026-03-dea-bromazolam",
-   "date": "2026-03-16",
-   "datePrec": "day",
-   "title": "DEA emergency-schedules bromazolam",
-   "place": "United States",
-   "region": "US",
-   "geo": "nation",
-   "lat": 38.88,
-   "lon": -77,
-   "kind": "policy",
-   "subs": [
-    "bromazolam"
-   ],
-   "molecules": "bromazolam (fake Xanax)",
-   "deaths": null,
-   "summary": "The designer benzodiazepine goes into Schedule I. DEA toxicology found fentanyl with it in 202 of 259 cases, so give naloxone anyway; it does not reverse the benzo itself.",
-   "source": "Federal Register (DEA)",
-   "url": "https://www.govinfo.gov/content/pkg/FR-2026-03-16/pdf/2026-05064.pdf",
    "added": "2026-10-15",
    "via": "seed"
   },
@@ -368,6 +171,7 @@
    "lon": -122.42,
    "kind": "data",
    "subs": [
+    "all",
     "fentanyl",
     "xylazine",
     "bromazolam",
@@ -422,52 +226,6 @@
    "summary": "Three in 2024 and one in 2025; nitazenes are rarely detected in the local supply.",
    "source": "NDEWS",
    "url": "https://ndews.org/wordpress/files/2026/02/202601_NDEWS_SSD_Report_Overview_2_EP.pdf",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
-   "id": "2025-12-la-isotonitazepyne",
-   "date": "2025-12-01",
-   "datePrec": "month",
-   "title": "Nitazene found in counterfeit M30 pills",
-   "place": "Los Angeles County",
-   "region": "California",
-   "geo": "county",
-   "lat": 34.05,
-   "lon": -118.24,
-   "kind": "drug-checking",
-   "subs": [
-    "nitazenes"
-   ],
-   "molecules": "isotonitazepyne",
-   "deaths": null,
-   "summary": "LA County's drug-checking program found isotonitazepyne in two counterfeit M30 pills.",
-   "source": "NDEWS",
-   "url": "https://ndews.org/wordpress/files/2026/02/202601_NDEWS_SSD_Report_Overview_2_EP.pdf",
-   "added": "2026-10-15",
-   "via": "seed"
-  },
-  {
-   "id": "2025-10-ohio-bci-first-cychlorphine",
-   "date": "2025-10-22",
-   "datePrec": "day",
-   "title": "Ohio's crime lab identifies cychlorphine for the first time",
-   "place": "Fairfield, Ohio",
-   "region": "US",
-   "geo": "city",
-   "lat": 39.345,
-   "lon": -84.56,
-   "kind": "seizure",
-   "subs": [
-    "cychlorphine",
-    "fentanyl",
-    "xylazine"
-   ],
-   "molecules": "cychlorphine (N-propionitrile chlorphine), fentanyl, xylazine",
-   "deaths": null,
-   "summary": "Ohio's crime lab (BCI) identified cychlorphine in a tan powder, with fentanyl and xylazine, seized at a non-fatal overdose in Fairfield; responders needed several doses of Narcan.",
-   "source": "Ohio Attorney General (BCI)",
-   "url": "https://ohioattorneygeneral.gov/Media/News-Releases/October-2025/BCI-Reports-Continued-Uptick-in-Carfentanil-Seizur",
    "added": "2026-10-15",
    "via": "seed"
   },
