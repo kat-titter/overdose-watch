@@ -4,8 +4,8 @@
 
 Are overdose deaths going down where we live and dance? This page puts official death counts for the
 United States, California, Nevada, San Francisco, Alameda County and Washoe County next to every reported
-overdose, cluster, health alert, drug-checking finding and new substance we can find in the Bay Area,
-California and Nevada. Every report links its primary source: the agency or organization that produced the information.
+overdose death and cluster of deaths we can find, with the drug each one names in its own colour (fentanyls,
+orphines, nitazenes, benzos, animal sedatives). Every report links its primary source: the agency that counted the deaths.
 
 Harm-reduction information, not medical advice. If someone won't wake up or isn't breathing normally,
 call 911 and give Narcan.
@@ -16,15 +16,16 @@ call 911 and give Narcan.
   - [CDC NCHS VSRR provisional counts](https://data.cdc.gov/d/xkb8-kh2a), states and US, monthly. Uses predicted values, which adjust for reporting delay.
   - [CDC NCHS provisional county-level counts](https://data.cdc.gov/d/gb4e-yj24), quarterly.
   - [San Francisco OCME preliminary monthly counts](https://data.sf.gov/d/jxrr-bmra), summed over 12 months.
-- `data/incidents.json`: one record per report, with its date, place, region, approximate position, kind,
-  substances, exact molecules as reported, deaths (only when the source states a count), a short summary,
-  and the source link. Field rules live in `tools/schema.py`.
+- `data/incidents.json`: one record per report of deaths, with its date, place, region, approximate position, kind
+  (a death, a cluster or a data release), substances (the first sets the map colour; `all` for all-drug totals), exact
+  molecules as reported, the death count the source states, a short summary, and the source link. Field rules live
+  in `tools/schema.py`.
 
 ## Updating
 
-Every Monday a scheduled job (Claude) refreshes the official counts and looks for new reports. It cites trusted
-primary sources only (health departments, medical examiners, the CDC and DEA, the Federal Register, attorneys
-general, police and courts, drug-checking programs); news coverage can point to a report but is never the citation.
+Every Monday a scheduled job (Claude) refreshes the official counts and looks for new reports of deaths. It cites
+trusted primary sources only (medical examiners and coroners, health departments, the CDC, the White House drug
+policy office); news coverage can point to a report but is never the citation.
 Reports added in the past week get a yellow ring on the map. The job runs:
 
 ```bash
