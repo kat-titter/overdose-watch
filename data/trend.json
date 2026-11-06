@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-19",
+ "generated": "2026-11-05",
  "metric": "Drug overdose deaths in the 12 months ending each month",
  "series": [
   {
@@ -959,7 +959,7 @@
    "level": "city",
    "source": "SF Office of the Chief Medical Examiner, preliminary monthly counts",
    "url": "https://data.sf.gov/d/jxrr-bmra",
-   "asOf": "2026-09-16",
+   "asOf": "2026-10-26",
    "points": [
     [
      "2020-12",
@@ -1236,6 +1236,10 @@
     [
      "2026-08",
      516
+    ],
+    [
+     "2026-09",
+     525
     ]
    ],
    "monthly": [
@@ -1558,6 +1562,10 @@
     [
      "2026-08",
      49
+    ],
+    [
+     "2026-09",
+     48
     ]
    ]
   },
