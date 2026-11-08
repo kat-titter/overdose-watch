@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Overdose Watch</title>
-<meta name="description" content="Are overdose deaths going down in the Bay Area, California and Nevada? Official death counts, plus overdoses, alerts and new drugs from primary sources. Updated weekly.">
+<meta name="description" content="Are overdose deaths going down in the Bay Area, California and Nevada? Official death counts, deaths by compound and every sourced report of deaths, updated weekly.">
 <meta property="og:title" content="Overdose Watch">
 <meta property="og:description" content="Official overdose death counts for the Bay Area, California and Nevada, plus overdoses, alerts and new drugs from primary sources. Updated weekly.">
 <meta property="og:type" content="website">
@@ -18,61 +18,63 @@
    Red = danger and the fentanyls; yellow = the thing to notice and what is new this week. Each drug class has its own colour
    (--k-*), checked as a set for colour-blind readers on the map's land (dataviz validate_palette.js, all pairs). */
 :root{
-  --bg:#ffffff; --ink:#161214; --body:#3b3537; --mute:#625a5c; --rule:#e7e2e3; --rule2:#cbc3c5; --card:#ffffff; --area:#ece6e7;
-  --red:#c8102e; --yel:#d9b100; --yeld:#9a7b00; --yelt:#fff2a8; --gray:#8f8486;
+  --bg:#ffffff; --ink:#161214; --body:#3b3537; --mute:#625a5c; --rule:#e7e2e3; --rule2:#cbc3c5;
+  --red:#c8102e; --yel:#d9b100; --yelt:#fff2a8;
   --k-fen:#c8102e; --k-orph:#b37903; --k-nit:#4983e5; --k-benzo:#0f8f6c; --k-sed:#0e5e8a; --k-all:#8f8486;
-  --land:#ece6e7; --landline:#c9bfc1; --water:#ffffff; --focus:#c8102e; --shadow:rgba(22,18,20,.14);
+  --land:#ece6e7; --landline:#c9bfc1;
   --display:'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif; --text:'Public Sans','Helvetica Neue',Arial,sans-serif; --mono:'DM Mono',Menlo,Consolas,monospace;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#121011; --ink:#f6f1f1; --body:#d9d1d2; --mute:#a9a0a2; --rule:#2f282a; --rule2:#4a4144; --card:#1c1718; --area:#2c2426;
-  --red:#ff5a6e; --yel:#f2cf3a; --yeld:#a88a10; --yelt:#3b3420; --gray:#a8a0a2;
+  --bg:#121011; --ink:#f6f1f1; --body:#d9d1d2; --mute:#a9a0a2; --rule:#2f282a; --rule2:#4a4144;
+  --red:#ff5a6e; --yel:#f2cf3a; --yelt:#3b3420;
   --k-fen:#ff5a6e; --k-orph:#eba002; --k-nit:#5682bb; --k-benzo:#31983d; --k-sed:#5bc1d9; --k-all:#a8a0a2;
-  --land:#2a2224; --landline:#4b4042; --water:#121011; --focus:#ff5a6e; --shadow:rgba(0,0,0,.5); color-scheme:dark}}
+  --land:#2a2224; --landline:#4b4042; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#121011; --ink:#f6f1f1; --body:#d9d1d2; --mute:#a9a0a2; --rule:#2f282a; --rule2:#4a4144; --card:#1c1718; --area:#2c2426;
-  --red:#ff5a6e; --yel:#f2cf3a; --yeld:#a88a10; --yelt:#3b3420; --gray:#a8a0a2;
+  --bg:#121011; --ink:#f6f1f1; --body:#d9d1d2; --mute:#a9a0a2; --rule:#2f282a; --rule2:#4a4144;
+  --red:#ff5a6e; --yel:#f2cf3a; --yelt:#3b3420;
   --k-fen:#ff5a6e; --k-orph:#eba002; --k-nit:#5682bb; --k-benzo:#31983d; --k-sed:#5bc1d9; --k-all:#a8a0a2;
-  --land:#2a2224; --landline:#4b4042; --water:#121011; --focus:#ff5a6e; --shadow:rgba(0,0,0,.5); color-scheme:dark}
+  --land:#2a2224; --landline:#4b4042; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--body);font:16px/1.55 var(--text)}
 a{color:var(--red);text-underline-offset:2px}
-.wrap{max-width:1120px;margin:0 auto;padding:28px 24px 72px}
+.wrap{max-width:1000px;margin:0 auto;padding:28px 24px 72px}
 .mast{display:flex;justify-content:space-between;align-items:flex-start;gap:10px 32px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1.5px solid var(--ink)}
 h1{margin:0;font:800 clamp(40px,6.5vw,64px)/.98 var(--display);letter-spacing:-.035em;color:var(--ink)}
 h1 span{color:var(--red)}
-.dek{margin:12px 0 0;max-width:580px;font-size:17px;color:var(--body)}
-.updated{margin:8px 0 0;font:500 13px var(--mono);color:var(--mute);white-space:nowrap}
-.alert{margin:18px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--red);font-size:15px;color:var(--ink)}
+.dek{margin:12px 0 0;font-size:19px;color:var(--body)}
+.deck{margin:10px 0 0;font:500 14px var(--mono)}   /* mirrors the deck's own "Live tracker" line */
+.updated{margin:8px 0 0;font:500 14px var(--mono);color:var(--mute);white-space:nowrap}
+.alert{margin:18px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--red);font-size:16px;color:var(--ink)}
 .alert b{color:var(--red)}
 .sec{margin-top:72px;display:flex;flex-direction:column;gap:18px}
+.tkey,.tgrid,.grid,.legend,.cfig,.keywrap,.latest table{margin-inline:21px}   /* text takes the full measure; a figure, its key and its table step in on both sides */
 h2{margin:0;font:800 clamp(26px,3.2vw,32px)/1.1 var(--display);letter-spacing:-.025em;color:var(--ink);text-wrap:balance}
 .sechead{display:flex;justify-content:space-between;align-items:baseline;gap:8px 24px;flex-wrap:wrap}
-.meta{margin:0;font:500 13px var(--mono);color:var(--mute)}
-.lead{margin:0;max-width:720px;font:600 21px/1.4 var(--display);color:var(--ink);text-wrap:pretty}
+.meta{margin:0;font:500 14px var(--mono);color:var(--mute)}
+.lead{margin:0;font:600 23px/1.35 var(--display);color:var(--ink);text-wrap:pretty}
 mark{background:var(--yelt);color:var(--ink);padding:0 .12em;border-radius:2px}
-.intro{margin:0;max-width:680px;font-size:15.5px}
-.tkey{margin:0;display:flex;flex-wrap:wrap;gap:6px 22px;font:500 12.5px var(--mono);color:var(--body)}
+.intro{margin:0}
+.tkey{margin:0;display:flex;flex-wrap:wrap;gap:6px 22px;font:500 12px var(--mono);color:var(--body)}
 .tkey span,.legend span{display:inline-flex;align-items:center;gap:8px}
 .ring,.solid{width:10px;height:10px;border-radius:50%;display:block;flex:none}
 .ring{border:1.5px solid var(--ink)} .solid{background:var(--ink)}
 .tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 36px;margin-top:6px}
 .tchart{min-width:0;display:flex;flex-direction:column;border-top:1px solid var(--rule2);padding-top:12px}
 .tchart h3{margin:0;font:700 16px/1.25 var(--display);color:var(--ink)}
-.chg{margin:4px 0 0;font:800 26px/1.1 var(--display);letter-spacing:-.02em;color:var(--ink)}
-.chg span{font:500 13px var(--mono);letter-spacing:0;color:var(--mute);margin-left:8px}
+.chg{margin:4px 0 0;font:800 23px/1.1 var(--display);letter-spacing:-.02em;color:var(--ink)}
+.chg span{font:500 12px var(--mono);letter-spacing:0;color:var(--mute);margin-left:8px}
 .chg.up{color:var(--red)}
-.now{margin:4px 0 10px;font:500 12.5px/1.45 var(--mono);color:var(--mute)}
+.now{margin:4px 0 10px;font:500 12px/1.45 var(--mono);color:var(--mute)}
 .now b{font-weight:500;color:var(--ink)}
 .cite{margin:6px 0 0;font:500 12px var(--mono);color:var(--mute)}
 .filters{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 20px}
-.fsel{display:flex;flex-direction:column;gap:5px;font:500 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
-select{font:600 14.5px var(--text);letter-spacing:0;text-transform:none;color:var(--ink);background:var(--bg);border:1.5px solid var(--rule2);border-radius:8px;padding:6px 10px;min-width:150px}
+.fsel{display:flex;flex-direction:column;gap:5px;font:500 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+select{font:600 14px var(--text);letter-spacing:0;text-transform:none;color:var(--ink);background:var(--bg);border:1.5px solid var(--rule2);border-radius:8px;padding:6px 10px;min-width:150px}
 .showing{margin-left:auto;padding-bottom:8px}
-.legend{margin:14px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px 22px;font:500 12.5px/1.4 var(--mono);color:var(--body)}
+.legend{margin:14px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px 22px;font:500 12px/1.4 var(--mono);color:var(--body)}
 .legend .unit{grid-column:1/-1;color:var(--ink)} .legend b{font-weight:500;color:var(--ink);margin-right:6px} .legend>span{align-items:flex-start} .legend>span>i{margin-top:3.5px}
 .dot{width:10px;height:10px;border-radius:50%;display:block;flex:none}
 .c-fen{background:var(--k-fen)} .c-orph{background:var(--k-orph)} .c-nit{background:var(--k-nit)} .c-benzo{background:var(--k-benzo)} .c-sed{background:var(--k-sed)} .c-all{background:var(--k-all)}
@@ -87,51 +89,70 @@ svg text{font-family:var(--mono)}
 #timeline{touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .side{display:flex;flex-direction:column;gap:36px;min-width:0}
 .offmap{display:flex;flex-direction:column}
-.om{display:grid;grid-template-columns:10px 92px minmax(0,1fr);gap:10px;align-items:start;text-align:left;font:14.5px/1.4 var(--text);color:var(--ink);background:none;border:none;border-top:1px solid var(--rule);padding:9px 0;cursor:pointer}
+.om{display:grid;grid-template-columns:10px 92px minmax(0,1fr);gap:10px;align-items:start;text-align:left;font:14px/1.4 var(--text);color:var(--ink);background:none;border:none;border-top:1px solid var(--rule);padding:9px 0;cursor:pointer}
 .om:hover .t{text-decoration:underline}
 .om .dot{margin-top:6px}
-.om .d{font:500 12.5px/1.6 var(--mono);color:var(--mute)}
-.om .p{display:block;color:var(--mute);font-size:13.5px}
-.offmap .note{margin:8px 0 0;font-size:13.5px;color:var(--mute)}
-.pop{position:absolute;z-index:5;width:min(330px,calc(100% - 16px));background:var(--card);color:var(--body);border:1.5px solid var(--ink);border-radius:10px;padding:12px 14px;box-shadow:0 10px 30px var(--shadow);display:flex;flex-direction:column;gap:8px}
-.pop .x{position:absolute;right:6px;top:4px;border:none;background:none;color:var(--mute);font:500 20px/1 var(--text);padding:4px 8px;cursor:pointer}
-.pop .pd{font:500 12.5px/1.5 var(--mono);color:var(--mute);padding-right:26px}
+.om .d{font:500 12px/1.6 var(--mono);color:var(--mute)}
+.om .p{display:block;color:var(--mute)}
+.offmap .note{margin:8px 0 0;font-size:14px;color:var(--mute)}
+.pop{position:absolute;z-index:5;width:min(330px,calc(100% - 16px));background:var(--bg);color:var(--body);border:1.5px solid var(--ink);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.pop .x{position:absolute;right:6px;top:4px;border:none;background:none;color:var(--mute);font:500 23px/1 var(--text);padding:4px 8px;cursor:pointer}
+.pop .pd{font:500 12px/1.5 var(--mono);color:var(--mute);padding-right:26px}
 .pop .pt{font:700 16px/1.3 var(--display);color:var(--ink)}
-.pop .pm{font:500 12.5px/1.45 var(--mono);color:var(--body)}
+.pop .pm{font:500 12px/1.45 var(--mono);color:var(--body)}
 .pop .ps{font:600 14px var(--text);color:var(--ink)}
 .pop .pr{border-top:1px solid var(--rule);padding-top:8px;display:flex;flex-direction:column;gap:3px}
-.pop .more2{align-self:flex-start;font:600 13px var(--text);color:var(--ink);background:none;border:1.5px solid var(--rule2);border-radius:999px;padding:4px 10px;cursor:pointer}
+.pop .more2{align-self:flex-start;font:600 14px var(--text);color:var(--ink);background:none;border:1.5px solid var(--rule2);border-radius:999px;padding:4px 10px;cursor:pointer}
 .list{display:flex;flex-direction:column;border-top:1.5px solid var(--ink);margin-top:14px}
 .item{display:grid;grid-template-columns:150px minmax(0,1fr) 170px;gap:20px;align-items:start;padding:18px 0;border-bottom:1px solid var(--rule)}
 .item.flash{background:var(--yelt)}
-.item .when{font:500 13px/1.55 var(--mono);color:var(--mute)}
+.item .when{font:500 14px/1.5 var(--mono);color:var(--mute)}
 .item .when b{display:block;font:600 14px var(--mono);color:var(--ink)}
 .item .when span{display:block}
-.new{display:inline-block;margin-top:6px;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--yelt);color:var(--ink);padding:1px 6px;border-radius:3px}
-.item h3{margin:0;font:700 18px/1.3 var(--display);color:var(--ink);text-wrap:balance}
-.item p{margin:6px 0 0;font-size:15px;max-width:66ch}
+.new{display:inline-block;margin-top:6px;font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--yelt);color:var(--ink);padding:1px 6px;border-radius:3px}
+.item h3{margin:0;font:700 19px/1.3 var(--display);color:var(--ink);text-wrap:balance}
+.item p{margin:6px 0 0}
 .item .tags{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;margin-top:10px}
-.tag{display:inline-flex;align-items:center;gap:7px;font:500 12.5px var(--mono);color:var(--ink)}
-.mol{font:500 12.5px var(--mono);color:var(--mute)}
-.item .src{text-align:right;font:500 13px var(--mono)}
-.item .dead{display:block;font:800 22px/1 var(--display);color:var(--ink);margin-bottom:8px}
+.tag{display:inline-flex;align-items:center;gap:7px;font:500 12px var(--mono);color:var(--ink)}
+.mol{font:500 12px var(--mono);color:var(--mute)}
+.item .src{text-align:right;font:500 14px var(--mono)}
+.item .dead{display:block;font:800 23px/1 var(--display);color:var(--ink);margin-bottom:8px}
 .morebtn{align-self:flex-start;margin-top:6px;font:600 14px var(--text);color:var(--ink);background:none;border:1.5px solid var(--rule2);border-radius:8px;padding:8px 14px;cursor:pointer}
 .keywrap{overflow-x:auto}
-.key{width:100%;max-width:860px;border-collapse:collapse;font-size:15px}
-.key th{font:500 11.5px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);text-align:left;vertical-align:bottom;padding:8px 16px 8px 0;border-bottom:1.5px solid var(--ink)}
+.key{width:100%;border-collapse:collapse}
+svg.mol{display:block;width:auto;height:auto;max-width:104px;max-height:72px;color:var(--ink)}
+.st .big{display:none;position:absolute;left:0;top:0;z-index:6;background:var(--bg);border:1.5px solid var(--ink);border-radius:10px;padding:12px 14px} .st .big svg.mol{max-width:none;max-height:none;margin:0} .st .big span{display:block;margin-top:6px;font:500 12px var(--mono);color:var(--mute);white-space:nowrap}
+.st:hover .big,.st:focus-within .big{display:block}
+.cfig{margin-top:4px} .cfig .tkey{margin:10px 0 0}
+.key .cname{display:flex;align-items:center;gap:12px} .key .st{position:relative;flex:none;width:104px;cursor:zoom-in} .key .st>svg{margin-left:auto}
+.key .cname b{display:block;font:700 16px/1.25 var(--display);color:var(--ink)} .key .cname span{display:flex;align-items:center;gap:8px;margin-top:3px;font:500 12px var(--mono);color:var(--mute)}
+.key th.num,.key td.heat{text-align:right} .key th.num{padding-right:14px}
+.key td.heat{font:500 16px var(--mono);color:var(--ink);padding:0 14px 0 10px;min-width:70px;background:color-mix(in oklab,var(--ink) calc(var(--h,0)*1%),transparent)}
+.key td.heat.none{color:var(--mute)}
+.key td.last{min-width:150px;font:500 12px/1.5 var(--mono);color:var(--mute)} .key td.last a{color:var(--ink)} .key td.last a:hover{color:var(--red)}
+.key th{font:500 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);text-align:left;vertical-align:bottom;padding:8px 16px 8px 0;border-bottom:1.5px solid var(--ink)}
 .key td{padding:10px 16px 10px 0;border-bottom:1px solid var(--rule);color:var(--ink)}
-.key .kname{display:flex;align-items:center;gap:9px}
 .key .no{color:var(--red);font-weight:700} .key .yes{font-weight:700}
-.give{margin:0;max-width:720px;font-size:15.5px;color:var(--ink)}
+.latest table{width:calc(100% - 42px);border-collapse:collapse;border-top:1.5px solid var(--ink)}
+.latest td{padding:10px 16px 10px 0;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink)}
+.latest td:first-child{width:170px;font:500 14px/1.5 var(--mono);color:var(--mute)} .latest td:first-child b{display:block;font-weight:500;color:var(--ink)} .latest td:first-child .new{margin-top:4px}
+.latest td a{color:var(--ink);font-weight:600} .latest td span{display:block;margin-top:2px;font:500 12px var(--mono);color:var(--mute)}
+.latest td:last-child{text-align:right;white-space:nowrap;font:800 16px var(--display)}
+.give{margin:0;color:var(--ink)}
 .give b{color:var(--red)}
 .about{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 48px}
-.about h3{margin:0 0 6px;font:700 17px var(--display);color:var(--ink)}
-.about p{margin:0;font-size:15px;max-width:60ch}
+.about h3{margin:0 0 6px;font:700 19px/1.25 var(--display);color:var(--ink)}
+.about p{margin:0}
 footer{margin-top:72px;padding-top:16px;border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--mute)}
 footer p{margin:0}
-.chipbtn:focus-visible,select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g[role="button"]:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g[role="button"]:focus-visible{outline:2px solid var(--red);outline-offset:2px}
 @media (max-width:980px){.tgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}}
-@media (max-width:720px){.item{grid-template-columns:1fr;gap:8px}.item .src{text-align:left}.about{grid-template-columns:1fr}.showing{margin-left:0;width:100%;padding-bottom:0}}
+@media (max-width:720px){.key thead{display:none}.key,.key tbody{display:block}
+  .key tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"name name name" "narcan narcan strip" "y1 y2 y3" "last last last";gap:8px 12px;padding:14px 0;border-bottom:1px solid var(--rule);align-items:start}
+  .key td{display:block;padding:0;border:0;min-width:0} .key td.heat{display:block;text-align:left;padding:0;min-width:0;background:none}
+  .key .cname{grid-area:name} .key .narcan{grid-area:narcan} .key .strip{grid-area:strip} .key .y1{grid-area:y1} .key .y2{grid-area:y2} .key .y3{grid-area:y3} .key .last{grid-area:last}
+  .key td[data-l]::before{content:attr(data-l);display:block;font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-bottom:1px}
+  .tkey,.tgrid,.grid,.legend,.cfig,.keywrap,.latest table{margin-inline:0}.latest table{width:100%}.latest tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--rule)}.latest td{display:block;padding:0;border:0;min-width:0}.latest td:first-child{grid-column:1/-1;width:auto}.latest td:first-child b{display:inline;margin-right:8px}.latest td:first-child .new{margin:0 0 0 8px}.item{grid-template-columns:1fr;gap:8px}.item .src{text-align:left}.about{grid-template-columns:1fr}.showing{margin-left:0;width:100%;padding-bottom:0}}
 @media (max-width:600px){.tgrid{grid-template-columns:1fr}.wrap{padding:20px 16px 56px}.sec{margin-top:56px}select{min-width:0}}
 @media (prefers-reduced-motion:no-preference){.item{transition:background-color .4s}}
 </style>
@@ -142,10 +163,16 @@ footer p{margin:0}
     <div>
       <h1>Overdose <span>Watch</span></h1>
       <p class="dek">Overdose deaths and new drugs in the Bay Area, California and Nevada, from official counts and primary sources.</p>
+      <p class="deck"><a href="https://kat-titter.github.io/three-minute-problem/">Why carry Narcan, in 22 slides: kat-titter.github.io/three-minute-problem ↗</a></p>
     </div>
     <p class="updated" id="updated">Loading…</p>
   </header>
   <p class="alert" role="note"><b>Someone won’t wake up?</b> Call 911, give Narcan, and keep them breathing.</p>
+
+  <section class="sec latest" aria-labelledby="h-latest">
+    <div class="sechead"><h2 id="h-latest">Latest reports</h2><p class="meta" id="lmeta"></p></div>
+    <table aria-label="The newest reports of overdose deaths, any place, newest first"><tbody id="latest"></tbody></table>
+  </section>
 
   <section class="sec" aria-labelledby="h-trend">
     <h2 id="h-trend">Is it going down?</h2>
@@ -187,21 +214,28 @@ footer p{margin:0}
   </section>
 
   <section class="sec" aria-labelledby="h-drugs">
-    <h2 id="h-drugs">What each drug means for Narcan</h2>
-    <div class="keywrap"><table class="key" aria-label="What each substance means for Narcan and fentanyl test strips">
-      <thead><tr><th>Substance</th><th>Narcan reverses it?</th><th>Fentanyl strip detects it?</th></tr></thead>
+    <div class="sechead"><h2 id="h-drugs">Which drugs, and does Narcan reverse them?</h2><p class="meta" id="cmeta"></p></div>
+    <p class="lead" id="clead">Loading the compound counts…</p>
+    <p class="intro" id="cintro"></p>
+    <figure class="fig cfig">
+      <figcaption>Deaths involving each newer drug, year to date <span>San Francisco</span></figcaption>
+      <svg id="comp" viewBox="0 0 640 320" role="img" aria-label="Stacked areas: San Francisco overdose deaths involving each newer drug, counted year to date at each monthly letter, one panel per year. Fluorofentanyl shrinks from 2024 to 2026 while xylazine and medetomidine grow."></svg>
+      <p class="tkey" id="compkey"></p>
+    </figure>
+    <div class="keywrap"><table class="key" aria-label="Each compound: its structure, class, whether Narcan reverses it, whether a fentanyl test strip detects it, San Francisco deaths involving it by year, and the latest report naming it">
+      <thead><tr><th>Compound</th><th>Narcan reverses it?</th><th>Fentanyl strip detects it?</th><th class="num" id="y1">SF deaths 2024</th><th class="num" id="y2">2025</th><th class="num" id="y3">2026</th><th>Latest report</th></tr></thead>
       <tbody id="keybody"></tbody>
     </table></div>
-    <p class="give"><b>Give Narcan to anyone who may be overdosing.</b> Benzos and sedatives usually come mixed with opioids, and Narcan reverses the opioid part.</p>
+    <p class="give"><b>Give Narcan to anyone who may be overdosing.</b> Benzos and sedatives usually come mixed with opioids, and Narcan reverses the opioid part. Why it fits one lock and not the others: <a href="https://kat-titter.github.io/three-minute-problem/#s7">The Three-Minute Problem, slides 7 to 12 ↗</a></p>
   </section>
 
   <section class="sec" aria-labelledby="h-about">
     <h2 id="h-about">How this works</h2>
     <div class="about">
-      <div><h3>Updated automatically, every week</h3><p>A scheduled job runs every Monday. It refreshes the official death counts from the CDC and San Francisco open-data APIs, then searches for new reports of deaths, checks each count against its source, and adds those that qualify. Reports added in the past week carry a yellow ring on the map.</p></div>
+      <div><h3>Updated automatically, every week</h3><p>A scheduled job runs every Monday. It refreshes the official death counts from the CDC and San Francisco open-data APIs, reads the San Francisco Medical Examiner’s newest monthly letter for the deaths involving each newer drug, checks the agencies that publish such counts, then searches for new reports of deaths, confirms each count against its source and adds those that qualify. Reports added in the past week carry a yellow ring on the map.</p></div>
       <div><h3>Trusted primary sources only</h3><p>Every report links to the organization that counted the deaths: medical examiners and coroners, health departments, the CDC and the White House drug policy office. News coverage alone does not qualify.</p></div>
       <div><h3>Points, not a heat map</h3><p>A few dozen reports would make a heat map of where news happens, not where people overdose. Each point is one report of deaths, placed approximately and coloured by the drug it names first. For how many people are dying, use the official counts above.</p></div>
-      <div><h3>Data and corrections</h3><p>The data files are public: <a href="https://github.com/kat-titter/overdose-watch/tree/main/data">incidents.json and trend.json</a>. Official counts come from <a href="https://data.cdc.gov/d/xkb8-kh2a">CDC state counts</a>, <a href="https://data.cdc.gov/d/gb4e-yj24">CDC county counts</a> and the <a href="https://data.sf.gov/d/jxrr-bmra">San Francisco Medical Examiner</a>. Spotted a mistake? <a href="https://github.com/kat-titter/overdose-watch/issues">Open an issue</a>.</p></div>
+      <div><h3>Data and corrections</h3><p>The data files are public: <a href="https://github.com/kat-titter/overdose-watch/tree/main/data">incidents, trend and compounds</a>. Structures are PubChem’s 2D records, drawn at one bond length. Official counts come from <a href="https://data.cdc.gov/d/xkb8-kh2a">CDC state counts</a>, <a href="https://data.cdc.gov/d/gb4e-yj24">CDC county counts</a> and the <a href="https://data.sf.gov/d/jxrr-bmra">San Francisco Medical Examiner</a>. Spotted a mistake? <a href="https://github.com/kat-titter/overdose-watch/issues">Open an issue</a>.</p></div>
     </div>
   </section>
 
@@ -237,13 +271,68 @@ footer p{margin:0}
   // reports added by an update in the past week (not the first seeding) get a yellow ring
   const isNew=r=>!!r.via&&r.via!=='seed'&&Date.now()-Date.parse((r.added||'1970-01-01')+'T12:00:00')<7.5*864e5;
 
-  // ---- substance key and the drug filter (reference knowledge, not records)
-  const kb=$('keybody'),fs=$('f-sub');
-  Object.entries(SUB).filter(([k])=>k!=='all').forEach(([k,s])=>{const tr=document.createElement('tr');
-    const td=(t,c)=>tr.appendChild(H('td',c,t));
-    const c=H('td'),w=H('span','kname'),i=H('i','dot c-'+s.cls);i.setAttribute('role','img');i.setAttribute('aria-label',CLS[s.cls].name);
-    w.append(i,s.label);c.appendChild(w);tr.appendChild(c);td(s.narcan,s.narcan==='no'?'no':'yes');td(s.strip,s.strip==='no'?'no':'');kb.appendChild(tr);
-    const o=H('option',null,s.label);o.value=k;fs.appendChild(o);});
+  // ---- the drug filter (one option per class key)
+  const fs=$('f-sub');
+  Object.entries(SUB).filter(([k])=>k!=='all').forEach(([k,s])=>{const o=H('option',null,s.label);o.value=k;fs.appendChild(o);});
+  // ---- the compounds: one row each (reference knowledge); the counts come from data/compounds.json, the latest report from the incidents
+  const COMPOUNDS=[
+    {key:'fentanyl',label:'Fentanyl',sub:'fentanyl',what:'synthetic opioid, the base of the supply',re:/(^|, )fentanyl\b/i,subKey:'fentanyl'}   /* subKey: the report's class tag names this compound itself */,
+    {key:'fluorofentanyl',label:'Fluorofentanyl',sub:'fentanyl',what:'fentanyl with a fluorine',re:/fluoro ?fentanyl/i},
+    {key:'methylfentanyl',label:'Methylfentanyl',sub:'fentanyl',what:'fentanyl with a methyl',re:/methylfentanyl/i},
+    {key:'carfentanil',label:'Carfentanil',sub:'carfentanil',what:'veterinary fentanyl, about 100 times stronger',re:/carfentanil/i,subKey:'carfentanil'},
+    {key:'cychlorphine',label:'Cychlorphine',sub:'cychlorphine',what:'benzimidazolone opioid, in fake pills',re:/chlorphine/i,subKey:'cychlorphine'},
+    {key:'n-desethyl-isotonitazene',label:'N-desethyl isotonitazene',sub:'nitazenes',what:'nitazene opioid',re:/desethyl ?isotonitazene/i},
+    {key:'n-pyrrolidino-protonitazene',label:'N-pyrrolidino protonitazene',sub:'nitazenes',what:'nitazene opioid',re:/pyrrolidino ?protonitazene/i},
+    {key:'bromazolam',label:'Bromazolam',sub:'bromazolam',what:'designer benzodiazepine',re:/(^|, )bromazolam\b/i},
+    {key:'ethylbromazolam',label:'Ethyl bromazolam',sub:'bromazolam',what:'designer benzodiazepine',re:/ethyl ?bromazolam/i},
+    {key:'phenazolam',label:'Phenazolam',sub:'bromazolam',what:'designer benzodiazepine',re:/phenazolam/i},
+    {key:'desalkylgidazepam',label:'Desalkylgidazepam',sub:'bromazolam',what:'designer benzodiazepine',re:/gidazepam/i},
+    {key:'xylazine',label:'Xylazine',sub:'xylazine',what:'animal sedative (tranq)',re:/xylazine/i,subKey:'xylazine'},
+    {key:'medetomidine',label:'Medetomidine',sub:'medetomidine',what:'animal sedative, stronger than xylazine',re:/medetomidine/i,subKey:'medetomidine'}];
+  const cname=k=>(COMPOUNDS.find(c=>c.key===k)||{}).label||k,name=cname;
+  const MONL=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function compounds(rows,comp,mols){
+    const kb=$('keybody');kb.replaceChildren();
+    const recs=comp.reports.slice().sort((a,b)=>(a.to+a.date).localeCompare(b.to+b.date));
+    const years=[...new Set(recs.map(r=>r.from.slice(0,4)))].sort().slice(-3);                     // the three most recent years on file
+    const latestOf=y=>recs.filter(r=>r.from.startsWith(y)).at(-1);                                   // the letter with the furthest month, newest if revised
+    const seriesOf=(y,k)=>{const m=new Map();recs.filter(r=>r.from.startsWith(y)).forEach(r=>m.set(r.to,r.counts[k]));return[...m.entries()].filter(e=>e[1]!=null);};
+    const cur=years.at(-1),curRec=latestOf(cur),through=`${MONL[Number(curRec.to.slice(5,7))-1]} ${curRec.to.slice(8,10)*1}`;
+    const full=y=>y===cur&&curRec.to.slice(5)!=='12-31'?`${y} to ${MON[Number(curRec.to.slice(5,7))-1]}`:y;
+    [['y1',years[0]],['y2',years[1]],['y3',years[2]]].forEach(([id,y],i)=>{const th=$(id);if(!th)return;th.textContent=(i?'':'SF deaths ')+(y?full(y):'');th.hidden=!y;});
+    const max=Math.max(1,...recs.map(r=>Math.max(0,...Object.values(r.counts))));
+    const cell=(y,k,tr,cls,lab)=>{const td=H('td','heat '+cls);td.setAttribute('data-l',lab);const rec=latestOf(y),v=rec?rec.counts[k]:undefined;
+      if(v==null){td.classList.add('none');td.textContent='–';td.title=`${y}: not among the drugs the Medical Examiner counted separately`;tr.appendChild(td);return;}
+      const h=Math.round(40*v/max);td.style.setProperty('--h',h);td.append(String(v));
+      const ser=seriesOf(y,k);
+      td.title=ser.map(e=>`through ${MON[Number(e[0].slice(5,7))-1]}: ${e[1]}`).join('; ');tr.appendChild(td);};
+    COMPOUNDS.forEach(c=>{const s=SUB[c.sub],tr=document.createElement('tr');
+      const st=H('div','st');if(mols[c.key]){st.innerHTML=mols[c.key].svg;const big=H('div','big');big.innerHTML=mols[c.key].svg;big.setAttribute('aria-hidden','true');big.appendChild(H('span',null,`${c.label}, PubChem CID ${mols[c.key].cid}`));st.appendChild(big);st.tabIndex=0;}
+      const nm=H('td','cname'),txt=H('div'),b=H('b',null,c.label),w=H('span'),i=H('i','dot c-'+s.cls);i.setAttribute('role','img');i.setAttribute('aria-label',CLS[s.cls].name);w.append(i,c.what);txt.append(b,w);nm.append(st,txt);tr.appendChild(nm);
+      const na=H('td','narcan '+(s.narcan==='no'?'no':'yes'),s.narcan);na.setAttribute('data-l','Narcan');tr.appendChild(na);
+      const sp=H('td','strip '+(s.strip==='no'?'no':''),s.strip);sp.setAttribute('data-l','Strip');tr.appendChild(sp);
+      years.forEach((y,k)=>cell(y,c.key,tr,'y'+(k+1),full(y)));
+      const last=H('td','last');last.setAttribute('data-l','Latest report');
+      const hit=rows.find(r=>c.re.test(r.molecules||'')||(c.subKey&&(r.subs||[]).includes(c.subKey)));   // rows are newest first
+      if(hit){const a=H('a',null,`${fmtDate(hit)} ${hit.place}`);a.href=hit.url;a.target='_blank';a.rel='noopener';a.title=`${hit.title} (${hit.source})`;
+        last.append(a,document.createElement('br'),hit.deaths.toLocaleString('en-US')+(hit.deaths===1?' death':' deaths')+(hit.subs[0]==='all'?' in all':''));}
+      else last.textContent='no report yet';
+      tr.appendChild(last);kb.appendChild(tr);});
+    // the takeaway, read from the numbers: the leader this year, the sharpest rise since the previous letter, the biggest fall from the first year shown
+    const lead=$('clead'),intro=$('cintro');lead.replaceChildren();intro.replaceChildren();
+    const curCounts=Object.entries(curRec.counts).sort((a,b)=>b[1]-a[1]);
+    if(curCounts.length){const [k,v]=curCounts[0],m=H('mark',null,name(k));lead.append(m,` leads San Francisco’s newer drugs this year: ${v} death${v===1?'':'s'} through ${through}.`);}
+    const prev=recs.filter(r=>r.from.startsWith(cur)&&r.to<curRec.to).at(-1);
+    const bits=[];
+    if(prev){const rise=Object.keys(curRec.counts).map(k=>[k,(prev.counts[k]||0),curRec.counts[k]]).filter(e=>e[2]-e[1]>=2).sort((a,b)=>(b[2]-b[1])-(a[2]-a[1]));
+      if(rise.length)bits.push(`${name(rise[0][0])} went from ${rise[0][1]} to ${rise[0][2]} between the ${MONL[Number(prev.date.slice(5,7))-1]} and ${MONL[Number(curRec.date.slice(5,7))-1]} letters.`);}
+    const first=latestOf(years[0]);
+    if(first&&years.length>1){const fall=Object.entries(first.counts).filter(([k,v])=>v>=10).map(([k,v])=>[k,v,curRec.counts[k]||0]).sort((a,b)=>(b[1]-b[2])-(a[1]-a[2]));
+      if(fall.length&&fall[0][1]>fall[0][2])bits.push(`${name(fall[0][0])} was in ${fall[0][1]} deaths in ${years[0]} and ${fall[0][2]} so far this year.`);}
+    bits.push('The Medical Examiner names these newer drugs in its monthly letter; a death with two of them counts under both. Narcan reverses the opioids and none of the rest.');
+    intro.textContent=bits.join(' ');
+    const cm=$('cmeta');cm.replaceChildren();const a=H('a',null,`SF Medical Examiner, ${fmtDate({date:curRec.date,datePrec:'day'})} ↗`);a.href=curRec.url;a.target='_blank';a.rel='noopener';cm.appendChild(a);
+  }
   fs.addEventListener('change',e=>{state.sub=e.target.value;render();});
   $('f-region').addEventListener('change',e=>{state.region=e.target.value;render();});
   // the key, one row per class, before the new-this-week and cluster rows
@@ -304,7 +393,7 @@ footer p{margin:0}
     el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openPop(el,rows,true);}});}
   function dot(g,r,x,y,rad,dim,ringless){const c=CLS[clsOf(r)];
     if(isNew(r)&&!dim&&!ringless)E(g,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:rad+3.5,fill:'none',stroke:'var(--yel)','stroke-width':2.5,'pointer-events':'none'});
-    const el=E(g,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:rad,fill:c.col,stroke:c.edge||'var(--water)','stroke-width':1.5,tabindex:0,role:'button','opacity':dim?.25:null,
+    const el=E(g,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:rad,fill:c.col,stroke:c.edge||'var(--bg)','stroke-width':1.5,tabindex:0,role:'button','opacity':dim?.25:null,
       'aria-label':`${fmtDate(r)}, ${r.place}: ${r.title}. Source: ${r.source}${isNew(r)?'. New this week':''}`});
     E(el,'title',{},`${fmtDate(r)}, ${r.place}\n${r.title}\nSource: ${r.source}`);hook(el,[r]);return el;}
 
@@ -328,7 +417,7 @@ footer p{margin:0}
 
   // DM Mono: advance 0.6 em; its text box runs 1.0 em above the baseline and 0.5 em below.
   // Obstacles are boxes {x0,y0,x1,y1} (m: a city marker a dot may cover) or line segments {seg:[x1,y1,x2,y2]} that text must not cross.
-  const CITY=10,REGION={fs:12,ls:1.8,fill:'var(--ink)',weight:500},box=(x,y,r)=>({x0:x-r,y0:y-r,x1:x+r,y1:y+r});
+  const CITY=12,REGION={fs:12,ls:1.8,fill:'var(--ink)',weight:500},box=(x,y,r)=>({x0:x-r,y0:y-r,x1:x+r,y1:y+r});
   const segHit=(r,[x1,y1,x2,y2])=>{let t0=0,t1=1;const dx=x2-x1,dy=y2-y1;   // Liang-Barsky clip of the segment against the box
     for(const [p,q] of [[-dx,x1-r.x0],[dx,r.x1-x1],[-dy,y1-r.y0],[dy,r.y1-y1]]){
       if(p===0){if(q<0)return false;}else{const t=q/p;if(p<0){if(t>t1)return false;if(t>t0)t0=t;}else{if(t<t0)return false;if(t<t1)t1=t;}}}
@@ -371,13 +460,14 @@ footer p{margin:0}
     return clusters;}
   function cluster(g,rows,x,y,rad){const sorted=rows.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
     const el=E(g,'g',{tabindex:0,role:'button','data-cluster':1,'aria-label':`${rows.length} reports near ${sorted[0].place}`});
-    E(el,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:rad.toFixed(1),fill:'var(--ink)',stroke:'var(--water)','stroke-width':1.5});
-    E(el,'text',{x:x.toFixed(1),y:(y+11.5*.35).toFixed(1),'text-anchor':'middle','font-size':11.5,'font-weight':500,fill:'var(--bg)'},rows.length);
+    E(el,'circle',{cx:x.toFixed(1),cy:y.toFixed(1),r:rad.toFixed(1),fill:'var(--ink)',stroke:'var(--bg)','stroke-width':1.5});
+    E(el,'text',{x:x.toFixed(1),y:(y+12*.35).toFixed(1),'text-anchor':'middle','font-size':12,'font-weight':500,fill:'var(--bg)'},rows.length);
     E(el,'title',{},`${rows.length} reports near ${sorted[0].place}`);hook(el,sorted);}
-  function scaleBar(g,x,y,km,P,obst,anchor){const L=P.km(km),x0=anchor==='end'?x-L:x;
+  function scaleBar(g,x,y,km,P,obst,anchor){const L=P.km(km),x0=anchor==='end'?x-L:x,tw=(km+' km').length*7.2;
+    const cx=anchor==='end'?Math.min(x0+L/2,x-tw/2):Math.max(x0+L/2,x0+tw/2);   // a label wider than its bar stays inside the map
     E(g,'path',{d:`M${x0} ${y-4}v4h${L}v-4`,fill:'none',stroke:'var(--ink)','stroke-width':1.2});
-    E(g,'text',{x:x0+L/2,y:y-8,'text-anchor':'middle','font-size':10,fill:'var(--body)'},km+' km');
-    obst.push({x0:x0-2,y0:y-8-10,x1:x0+L+2,y1:y+2});}
+    E(g,'text',{x:cx.toFixed(1),y:y-8,'text-anchor':'middle','font-size':12,fill:'var(--body)'},km+' km');
+    obst.push({x0:Math.min(x0,cx-tw/2)-2,y0:y-8-12,x1:Math.max(x0+L,cx+tw/2)+2,y1:y+2});}
 
   // California + Nevada on the left (on top on phones), the Bay Area inset on the right (below on phones), joined by two connector lines
   function drawMap(rows){
@@ -407,9 +497,9 @@ footer p{margin:0}
     // Bay Area inset: ocean, land, then the bay on top; square corners so the connectors meet them
     const oi=[],bi={x0:5,y0:5,x1:wi-5,y1:PI.h-5},gc=E(gi,'g',{'clip-path':'url(#inclip)'}),m=.05;
     const landPts=[[IN.latA+m,IN.lonA-m],[COAST[0][0],IN.lonA-m],...COAST,[IN.latB-m,COAST.at(-1)[1]],[IN.latB-m,IN.lonB+m],[IN.latA+m,IN.lonB+m]];
-    E(gc,'rect',{width:wi,height:PI.h,fill:'var(--water)'});
+    E(gc,'rect',{width:wi,height:PI.h,fill:'var(--bg)'});
     poly(gc,landPts,PI,{fill:'var(--land)',stroke:'var(--landline)','stroke-width':1});
-    poly(gc,BAY,PI,{fill:'var(--water)',stroke:'var(--landline)','stroke-width':1});
+    poly(gc,BAY,PI,{fill:'var(--bg)',stroke:'var(--landline)','stroke-width':1});
     const lP=projPts(landPts,PI),bP=projPts(BAY,PI),landI=(x,y)=>inPoly(x,y,lP)&&!inPoly(x,y,bP);
     E(gi,'rect',{width:wi,height:PI.h,fill:'none',stroke:'var(--ink)','stroke-width':1.2});
     labelAt(gi,'BAY AREA',[[wi/2,22]],oi,{x0:0,y0:0,x1:wi,y1:PI.h},REGION);
@@ -430,7 +520,7 @@ footer p{margin:0}
   // ---- timeline: dot stacks per month from Jan 2025 (older reports in one "older" column); drag to pick months
   let TL=null;
   function drawTimeline(rows,win){
-    const t=$('timeline'),W=Math.max(260,Math.round(t.getBoundingClientRect().width||440)),L=34,R=8,fs=11;
+    const t=$('timeline'),W=Math.max(260,Math.round(t.getBoundingClientRect().width||440)),L=36,R=8,fs=12;
     const dated=rows.filter(r=>/^\d{4}-\d\d/.test(r.date||'')).map(r=>({r,i:Math.max(-1,mi(r.date))}));
     const early=dated.some(o=>o.i<0);
     const months=Math.max(23,(NOW.getFullYear()-2025)*12+NOW.getMonth(),...dated.map(o=>o.i))+1;
@@ -468,6 +558,40 @@ footer p{margin:0}
       state.when={k:'custom',from:ym(lo),to:ym(hi)};syncWhen();render();};
     t.addEventListener('pointerup',end);t.addEventListener('pointercancel',()=>{a=null;render();});})();
 
+  // ---- composition: deaths involving each newer drug, stacked, year to date; one hue per class, a lighter step per compound in it
+  const CCOL={fluorofentanyl:'var(--k-fen)',methylfentanyl:'color-mix(in oklab,var(--k-fen) 60%,var(--bg))',carfentanil:'color-mix(in oklab,var(--k-fen) 40%,var(--bg))',
+    cychlorphine:'var(--k-orph)','n-desethyl-isotonitazene':'var(--k-nit)','n-pyrrolidino-protonitazene':'color-mix(in oklab,var(--k-nit) 55%,var(--bg))',
+    bromazolam:'var(--k-benzo)',ethylbromazolam:'color-mix(in oklab,var(--k-benzo) 70%,var(--bg))',phenazolam:'color-mix(in oklab,var(--k-benzo) 48%,var(--bg))',desalkylgidazepam:'color-mix(in oklab,var(--k-benzo) 30%,var(--bg))',
+    xylazine:'var(--k-sed)',medetomidine:'color-mix(in oklab,var(--k-sed) 55%,var(--bg))'};
+  function drawComp(){const comp=state.comp;if(!comp)return;const svg=$('comp'),W=Math.max(300,Math.round(svg.getBoundingClientRect().width||640)),Ht=W<500?260:320,L=40,R=18,T=40,B=Ht-30,fs=12;
+    const recs=comp.reports.slice().sort((a,b)=>(a.to+a.date).localeCompare(b.to+b.date));
+    const years=[...new Set(recs.map(r=>r.from.slice(0,4)))].sort().slice(-3);
+    const byYear=years.map(y=>{const m=new Map();recs.filter(r=>r.from.startsWith(y)).forEach(r=>m.set(Number(r.to.slice(5,7)),r.counts));return{y,pts:[...m.entries()].sort((a,b)=>a[0]-b[0])};});
+    const keys=COMPOUNDS.map(c=>c.key).filter(k=>recs.some(r=>r.counts[k]!=null)),tot=c=>Object.values(c).reduce((a,b)=>a+b,0);
+    const top=nice(Math.max(1,...byYear.flatMap(o=>o.pts.map(p=>tot(p[1]))))),Y=v=>B-(B-T)*v/top;
+    svg.setAttribute('viewBox',`0 0 ${W} ${Ht}`);svg.replaceChildren();
+    E(svg,'text',{x:2,y:12,'font-size':fs,fill:'var(--mute)'},'deaths');   // the y unit, once, above the axis
+    [top/2,top].forEach(v=>E(svg,'path',{d:`M${L} ${Y(v).toFixed(1)}H${W-R}`,stroke:'var(--rule)','stroke-width':1}));
+    [0,top/2,top].forEach(v=>E(svg,'text',{x:L-6,y:(Y(v)+fs*.35).toFixed(1),'text-anchor':'end','font-size':fs,fill:'var(--mute)'},fmtN(v)));
+    // a year with only its year-end letter is one column; a year with monthly letters spans twelve months
+    const gap=18,avail=W-L-R-gap*(byYear.length-1),single=byYear.filter(o=>o.pts.length<2).length,multi=byYear.length-single;
+    const pwS=Math.min(avail/byYear.length,Math.max(78,avail*1.6/(1.6*single+12*multi))),pwM=multi?(avail-pwS*single)/multi:0;let x0=L;   // a year-end column holds its "year total" label; monthly years share the rest
+    byYear.forEach(o=>{const monthly=o.pts.length>1,pw=monthly?pwM:pwS,X=m=>monthly?x0+pw*m/12:x0+pw/2,lastM=o.pts.at(-1)[0];
+      E(svg,'text',{x:(x0+pw/2).toFixed(1),y:T-8,'text-anchor':'middle','font-size':fs,'font-weight':500,fill:'var(--ink)'},o.y+(monthly&&lastM<12?' to '+MON[lastM-1]:''));
+      E(svg,'path',{d:`M${x0.toFixed(1)} ${B}H${(x0+pw).toFixed(1)}`,stroke:'var(--ink)','stroke-width':1.5});
+      if(monthly){const st=pw<200?6:3;for(let m=st;m<=12;m+=st){E(svg,'path',{d:`M${X(m).toFixed(1)} ${B}v4`,stroke:'var(--ink)','stroke-width':1});E(svg,'text',{x:X(m).toFixed(1),y:B+16,'text-anchor':'middle','font-size':fs,fill:'var(--mute)'},MON[m-1]);}}
+      else E(svg,'text',{x:X(0).toFixed(1),y:B+16,'text-anchor':'middle','font-size':fs,fill:'var(--mute)'},'year total');
+      const base=new Map(o.pts.map(p=>[p[0],0]));
+      keys.forEach(k=>{const ys=o.pts.map(([m,c])=>[m,base.get(m),base.get(m)+(c[k]||0)]);if(!ys.some(a=>a[2]>a[1]))return;let d;
+        if(monthly){const up=[[0,0,0],...ys];d='M'+up.map(a=>`${X(a[0]).toFixed(1)} ${Y(a[2]).toFixed(1)}`).join('L')+'L'+up.slice().reverse().map(a=>`${X(a[0]).toFixed(1)} ${Y(a[1]).toFixed(1)}`).join('L')+'Z';}
+        else{const a=ys[0],bw=pw*.62;d=`M${(X(0)-bw/2).toFixed(1)} ${Y(a[1]).toFixed(1)}H${(X(0)+bw/2).toFixed(1)}V${Y(a[2]).toFixed(1)}H${(X(0)-bw/2).toFixed(1)}Z`;}
+        const last=ys.at(-1),el=E(svg,'path',{d,fill:CCOL[k]||'var(--k-all)',stroke:'var(--bg)','stroke-width':.8});
+        E(el,'title',{},`${cname(k)}: ${last[2]-last[1]} ${monthly?'through '+MONL[last[0]-1]+' '+o.y:'in '+o.y}`);
+        ys.forEach(a=>base.set(a[0],a[2]));});
+      x0+=pw+gap;});
+    const key=$('compkey');key.replaceChildren();keys.forEach(k=>{const sp=H('span'),i=H('i','dot');i.style.background=CCOL[k]||'var(--k-all)';sp.append(i,cname(k));key.appendChild(sp);});
+  }
+
   // ---- official trend: one small chart per place, drawn at its true pixel width
   const nice=v=>{const p=Math.pow(10,Math.floor(Math.log10(v))),m=v/p;return[1,1.2,1.5,2,2.5,3,4,5,6,8,10].find(n=>n>=m-1e-9)*p;};
   const fmtN=v=>v>=10000?Math.round(v/1000)+'k':Math.round(v).toLocaleString('en-US');
@@ -484,7 +608,7 @@ footer p{margin:0}
       art.replaceChildren(H('h3',null,s.name),ch,now,svg,cite);art.dataset.key=s.key;grid.appendChild(art);});
     [...grid.children].forEach(art=>chart(art.querySelector('svg'),tr.series.find(s=>s.key===art.dataset.key),dom));}
   function chart(svg,s,dom){
-    const W=Math.max(220,Math.round(svg.getBoundingClientRect().width||320)),Ht=150,L=40,R=10,T=26,B=124,fs=11;
+    const W=Math.max(220,Math.round(svg.getBoundingClientRect().width||320)),Ht=150,L=46,R=10,T=26,B=124,fs=12;
     const xi=k=>(Number(k.slice(0,4))-Number(dom.a.slice(0,4)))*12+Number(k.slice(5,7))-Number(dom.a.slice(5,7)),n=xi(dom.b);
     const X=k=>L+(W-L-R)*xi(k)/n,top=nice(Math.max(...s.points.map(p=>p[1]))),Y=v=>B-(B-T)*v/top;
     svg.setAttribute('viewBox',`0 0 ${W} ${Ht}`);svg.replaceChildren();
@@ -492,7 +616,7 @@ footer p{margin:0}
     [top/2,top].forEach(v=>E(svg,'path',{d:`M${L} ${Y(v).toFixed(1)}H${W-R}`,stroke:'var(--rule)','stroke-width':1}));
     [0,top/2,top].forEach(v=>E(svg,'text',{x:L-6,y:(Y(v)+fs*.35).toFixed(1),'text-anchor':'end','font-size':fs,fill:'var(--mute)'},fmtN(v)));
     const pts=s.points.filter(p=>p[0]>=dom.a),d=pts.map(([k,v],i)=>(i?'L':'M')+X(k).toFixed(1)+' '+Y(v).toFixed(1)).join('');
-    E(svg,'path',{d:`${d}L${X(pts.at(-1)[0]).toFixed(1)} ${B}L${X(pts[0][0]).toFixed(1)} ${B}Z`,fill:'var(--area)'});
+    E(svg,'path',{d:`${d}L${X(pts.at(-1)[0]).toFixed(1)} ${B}L${X(pts[0][0]).toFixed(1)} ${B}Z`,fill:'var(--land)'});
     E(svg,'path',{d:`M${L} ${B}H${W-R}`,stroke:'var(--ink)','stroke-width':1.5});
     E(svg,'path',{d,fill:'none',stroke:'var(--ink)','stroke-width':2,'stroke-linejoin':'round'});
     const y0=Number(dom.a.slice(0,4)),y1=Number(dom.b.slice(0,4)),lw=4*fs*.6;let last=-1e9;
@@ -504,6 +628,12 @@ footer p{margin:0}
     if(c.k0)E(svg,'circle',{cx:X(c.k0).toFixed(1),cy:Y(c.v0).toFixed(1),r:4,fill:'var(--bg)',stroke:'var(--ink)','stroke-width':1.5});
     E(svg,'circle',{cx:X(c.k).toFixed(1),cy:Y(c.v).toFixed(1),r:4.5,fill:'var(--ink)',stroke:'var(--bg)','stroke-width':1.5});
   }
+  // the newest reports, any place: date and place, the title linking its source, the deaths
+  function latest(){const tb=$('latest');tb.replaceChildren();const rows=state.rows.slice(0,5);
+    rows.forEach(r=>{const tr=H('tr'),d=H('td'),t=H('td'),a=H('a',null,r.title);d.append(H('b',null,fmtDate(r)),r.place);if(isNew(r))d.appendChild(H('span','new','New'));
+      a.href=r.url;a.target='_blank';a.rel='noopener';t.append(a,H('span',null,r.source));
+      tr.append(d,t,H('td',null,r.deaths.toLocaleString('en-US')+(r.deaths===1?' death':' deaths')+(r.subs[0]==='all'?' in all':'')));tb.appendChild(tr);});
+    const m=$('lmeta');m.replaceChildren();const n=state.rows.filter(isNew).length,a=H('a',null,`${n?n+' added this week, ':''}all ${state.rows.length} reports with the map ↓`);a.href='#h-reports';m.appendChild(a);}
   function answer(){const tr=state.trend;if(!tr)return;const cs=tr.series.map(s=>({s,c:ago(s)})).filter(o=>o.c.pct!=null);
     const down=cs.filter(o=>o.c.pct<-.03),flat=cs.filter(o=>Math.abs(o.c.pct)<=.03),up=cs.filter(o=>o.c.pct>.03);
     const names=a=>a.map(o=>o.s.name).join(', ').replace(/, ([^,]*)$/,' and $1');
@@ -538,17 +668,17 @@ footer p{margin:0}
     const more=$('more');more.hidden=shown.length<=LIST;more.textContent=state.showAll?'Show the latest only':`Show all ${shown.length} reports`;
   }
   // figures are drawn at their true pixel width, so redraw them when their containers change width
-  let lastW='';new ResizeObserver(()=>{const w=[$('map'),$('timeline'),$('tgrid')].map(e=>Math.round(e.getBoundingClientRect().width)).join();
-    if(w===lastW||!state.rows.length)return;lastW=w;render();drawTrend();}).observe(document.body);
+  let lastW='';new ResizeObserver(()=>{const w=[$('map'),$('timeline'),$('tgrid'),$('comp')].map(e=>Math.round(e.getBoundingClientRect().width)).join();
+    if(w===lastW||!state.rows.length)return;lastW=w;render();drawTrend();drawComp();}).observe(document.body);
 
   // ---- data: plain JSON files next to this page
   const get=u=>fetch(u,{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(u+' '+r.status);return r.json();});
-  Promise.all([get('data/incidents.json'),get('data/trend.json')]).then(([inc,tr])=>{
+  Promise.all([get('data/incidents.json'),get('data/trend.json'),get('data/compounds.json'),get('data/molecules.json')]).then(([inc,tr,comp,mols])=>{
     state.rows=inc.incidents.filter(r=>r.deaths>0).sort((a,b)=>(b.date||'').localeCompare(a.date||''));state.trend=tr;
-    const last=[inc.updated,tr.generated].sort().at(-1),[y,m,dd]=last.split('-');
+    const last=[inc.updated,tr.generated,comp.generated].sort().at(-1),[y,m,dd]=last.split('-');
     $('updated').textContent=`Last updated ${MON[m-1]} ${+dd}, ${y}`;
-    answer();drawTrend();render();
-  }).catch(e=>{$('updated').textContent='Could not load the data. Please reload.';$('answer').textContent='';$('list').replaceChildren(H('p','meta','Could not load the reports ('+e.message+').'));});
+    state.comp=comp;latest();answer();drawTrend();render();compounds(state.rows,comp,mols);drawComp();
+  }).catch(e=>{$('updated').textContent='Could not load the data. Please reload.';$('answer').textContent='';$('clead').textContent='';$('list').replaceChildren(H('p','meta','Could not load the reports ('+e.message+').'));});
 })();
 </script>
 </body>
