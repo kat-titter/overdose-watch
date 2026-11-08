@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@700;800&family=Public+Sans:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap">
 <style>
 /* A news-and-science page: hairline rules and whitespace instead of boxes, one style per role, aligned columns.
-   Red = danger and the fentanyls; yellow = the thing to notice and what is new this week. Each drug class has its own colour
+   Red = danger and the fentanyls; yellow = the thing to notice and what was published this week. Each drug class has its own colour
    (--k-*), checked as a set for colour-blind readers on the map's land (dataviz validate_palette.js, all pairs). */
 :root{
   --bg:#ffffff; --ink:#161214; --body:#3b3537; --mute:#625a5c; --rule:#e7e2e3; --rule2:#cbc3c5;
@@ -58,7 +58,7 @@ h2{margin:0;font:800 clamp(26px,3.2vw,32px)/1.1 var(--display);letter-spacing:-.
 mark{background:var(--yelt);color:var(--ink);padding:0 .12em;border-radius:2px}
 .intro{margin:0}
 .tkey{margin:0;display:flex;flex-wrap:wrap;gap:6px 22px;font:500 12px var(--mono);color:var(--body)}
-.tkey span,.legend span{display:inline-flex;align-items:center;gap:8px}
+.tkey span,.legend span{display:inline-flex;align-items:center;gap:8px} .tkey b{font-weight:500;color:var(--ink);margin-right:4px} #compkey span{flex-wrap:wrap;row-gap:6px}
 .ring,.solid{width:10px;height:10px;border-radius:50%;display:block;flex:none}
 .ring{border:1.5px solid var(--ink)} .solid{background:var(--ink)}
 .tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 36px;margin-top:6px}
@@ -173,7 +173,7 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
   <section class="sec latest" aria-labelledby="h-latest">
     <div class="sechead"><h2 id="h-latest">Latest reports</h2><p class="meta" id="lmeta"></p></div>
     <table aria-label="The newest reports of overdose deaths, any place, newest first"><tbody id="latest"></tbody></table>
-    <p class="tkey" id="lkey" hidden><span><i class="dot" style="background:var(--yelt)"></i>added in the past week</span></p>
+    <p class="tkey" id="lkey" hidden><span><i class="dot" style="background:var(--yelt)"></i>published in the past week</span></p>
   </section>
 
   <section class="sec" aria-labelledby="h-trend">
@@ -208,7 +208,7 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
     </div>
     <p class="legend" id="legend" aria-label="Map key">
       <span class="unit">One dot is one report of deaths, in the colour of the drug it names first.</span>
-      <span id="lg-new" hidden><i class="newring"></i>new this week</span>
+      <span id="lg-new" hidden><i class="newring"></i>published this week</span>
       <span id="lg-cluster" hidden><i class="clus"></i>10 or more in one place</span>
     </p>
     <div class="list" id="list"><p class="meta" style="padding:18px 0">Loading reports…</p></div>
@@ -235,7 +235,7 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
   <section class="sec" aria-labelledby="h-about">
     <h2 id="h-about">How this works</h2>
     <div class="about">
-      <div><h3>Updated automatically, every week</h3><p>A scheduled job runs every Monday. It refreshes the official death counts from the CDC and San Francisco open-data APIs, reads the San Francisco Medical Examiner’s newest monthly letter for the deaths involving each newer drug, checks the agencies that publish such counts, then searches for new reports of deaths, confirms each count against its source and adds those that qualify. Reports added in the past week carry a yellow ring on the map.</p></div>
+      <div><h3>Updated automatically, every week</h3><p>A scheduled job runs every Monday. It refreshes the official death counts from the CDC and San Francisco open-data APIs, reads the San Francisco Medical Examiner’s newest monthly letter for the deaths involving each newer drug, checks the agencies that publish such counts, then searches for new reports of deaths, confirms each count against its source and adds those that qualify. Reports published in the past week carry a yellow ring on the map.</p></div>
       <div><h3>Trusted primary sources only</h3><p>Every report links to the organization that counted the deaths: medical examiners and coroners, health departments, the CDC and the White House drug policy office. News coverage alone does not qualify.</p></div>
       <div><h3>Points, not a heat map</h3><p>A few dozen reports would make a heat map of where news happens, not where people overdose. Each point is one report of deaths, placed approximately and coloured by the drug it names first. For how many people are dying, use the official counts above.</p></div>
       <div><h3>Data and corrections</h3><p>The data files are public: <a href="https://github.com/kat-titter/overdose-watch/tree/main/data">incidents, trend and compounds</a>. Structures are PubChem’s 2D records, drawn at one bond length. Official counts come from <a href="https://data.cdc.gov/d/xkb8-kh2a">CDC state counts</a>, <a href="https://data.cdc.gov/d/gb4e-yj24">CDC county counts</a> and the <a href="https://data.sf.gov/d/jxrr-bmra">San Francisco Medical Examiner</a>. Spotted a mistake? <a href="https://github.com/kat-titter/overdose-watch/issues">Open an issue</a>.</p></div>
@@ -271,8 +271,8 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
   const $=id=>document.getElementById(id);
   const state={rows:[],trend:null,sub:'',region:'',when:{k:'all'},showAll:false};
   const NOW=new Date(),iso=d=>d.toISOString().slice(0,10),LIST=8;
-  // reports added by an update in the past week (not the first seeding) get a yellow ring
-  const isNew=r=>!!r.via&&r.via!=='seed'&&Date.now()-Date.parse((r.added||'1970-01-01')+'T12:00:00')<7.5*864e5;
+  // reports dated in the past week (their publication or event date) wear the yellow: the map ring, the list chip, the latest-table row
+  const isNew=r=>Date.now()-Date.parse((r.date||'1970-01-01')+'T12:00:00')<7.5*864e5;
 
   // ---- the drug filter (one option per class key)
   const fs=$('f-sub');
@@ -566,7 +566,7 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
     cychlorphine:'var(--k-orph)','n-desethyl-isotonitazene':'var(--k-nit)','n-pyrrolidino-protonitazene':'color-mix(in oklab,var(--k-nit) 55%,var(--bg))',
     bromazolam:'var(--k-benzo)',ethylbromazolam:'color-mix(in oklab,var(--k-benzo) 70%,var(--bg))',phenazolam:'color-mix(in oklab,var(--k-benzo) 48%,var(--bg))',desalkylgidazepam:'color-mix(in oklab,var(--k-benzo) 30%,var(--bg))',
     xylazine:'var(--k-sed)',medetomidine:'color-mix(in oklab,var(--k-sed) 55%,var(--bg))'};
-  function drawComp(){const comp=state.comp;if(!comp)return;const svg=$('comp'),W=Math.max(300,Math.round(svg.getBoundingClientRect().width||640)),Ht=W<500?260:320,L=40,R=18,T=40,B=Ht-30,fs=12;
+  function drawComp(){const comp=state.comp;if(!comp)return;const svg=$('comp'),W=Math.max(300,Math.round(svg.getBoundingClientRect().width||640)),Ht=W<500?260:320,L=40,wide=W>=700,R=wide?168:18,T=40,B=Ht-30,fs=12,ends=[];   // wide: room at the right for each band's name
     const recs=comp.reports.slice().sort((a,b)=>(a.to+a.date).localeCompare(b.to+b.date));
     const years=[...new Set(recs.map(r=>r.from.slice(0,4)))].sort().slice(-3);
     const byYear=years.map(y=>{const m=new Map();recs.filter(r=>r.from.startsWith(y)).forEach(r=>m.set(Number(r.to.slice(5,7)),r.counts));return{y,pts:[...m.entries()].sort((a,b)=>a[0]-b[0])};});
@@ -589,10 +589,19 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
         if(monthly){const up=[[0,0,0],...ys];d='M'+up.map(a=>`${X(a[0]).toFixed(1)} ${Y(a[2]).toFixed(1)}`).join('L')+'L'+up.slice().reverse().map(a=>`${X(a[0]).toFixed(1)} ${Y(a[1]).toFixed(1)}`).join('L')+'Z';}
         else{const a=ys[0],bw=pw*.62;d=`M${(X(0)-bw/2).toFixed(1)} ${Y(a[1]).toFixed(1)}H${(X(0)+bw/2).toFixed(1)}V${Y(a[2]).toFixed(1)}H${(X(0)-bw/2).toFixed(1)}Z`;}
         const last=ys.at(-1),el=E(svg,'path',{d,fill:CCOL[k]||'var(--k-all)',stroke:'var(--bg)','stroke-width':.8});
+        if(monthly&&o===byYear.at(-1)&&last[2]>last[1])ends.push({k,v:last[2]-last[1],x:X(last[0]),y:(Y(last[1])+Y(last[2]))/2});
         E(el,'title',{},`${cname(k)}: ${last[2]-last[1]} ${monthly?'through '+MONL[last[0]-1]+' '+o.y:'in '+o.y}`);
         ys.forEach(a=>base.set(a[0],a[2]));});
       x0+=pw+gap;});
-    const key=$('compkey');key.replaceChildren();keys.forEach(k=>{const sp=H('span'),i=H('i','dot');i.style.background=CCOL[k]||'var(--k-all)';sp.append(i,cname(k));key.appendChild(sp);});
+    // names at their place: one label per band of the latest letter, stacked clear of each other, a leader from the band's end
+    if(wide&&ends.length){ends.sort((a,b)=>a.y-b.y);const step=fs+4;let y=Math.max(T+fs/2,ends[0].y);
+      ends.forEach(e=>{e.ly=Math.max(y,e.y);y=e.ly+step;});const over=ends.at(-1).ly-(B-2);if(over>0)ends.forEach(e=>e.ly-=over);
+      ends.forEach(e=>{const x0=e.x+3,x1=W-R+14;E(svg,'path',{d:`M${x0.toFixed(1)} ${e.y.toFixed(1)}L${(x1-4).toFixed(1)} ${e.ly.toFixed(1)}`,stroke:'var(--rule2)','stroke-width':1,fill:'none'});
+        E(svg,'circle',{cx:x1+4,cy:e.ly.toFixed(1),r:4,fill:CCOL[e.k]||'var(--k-all)'});
+        E(svg,'text',{x:x1+12,y:(e.ly+fs*.35).toFixed(1),'font-size':fs,fill:'var(--ink)'},`${cname(e.k)} ${e.v}`);});}
+    // the key, grouped by drug class (the hue), each compound a lighter step of it
+    const key=$('compkey');key.replaceChildren();Object.keys(CLS).forEach(cl=>{const ks=keys.filter(k=>SUB[(COMPOUNDS.find(c=>c.key===k)||{}).sub]?.cls===cl);if(!ks.length)return;
+      const sp=H('span');sp.append(H('b',null,CLS[cl].name));ks.forEach(k=>{const i=H('i','dot');i.style.background=CCOL[k]||'var(--k-all)';sp.append(i,cname(k));});key.appendChild(sp);});
   }
 
   // ---- official trend: one small chart per place, drawn at its true pixel width
@@ -636,7 +645,7 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
     rows.forEach(r=>{const tr=H('tr'),d=H('td'),t=H('td'),a=H('a',null,r.title);d.append(H('b',null,fmtDate(r)),r.place);if(isNew(r))tr.dataset.new='';
       a.href=r.url;a.target='_blank';a.rel='noopener';t.append(a,H('span',null,r.source));
       tr.append(d,t,H('td',null,r.deaths.toLocaleString('en-US')+(r.deaths===1?' death':' deaths')+(r.subs[0]==='all'?' in all':'')));tb.appendChild(tr);});
-    const m=$('lmeta');m.replaceChildren();const a=H('a',null,`All ${state.rows.length} reports, with the map ↓`);a.href='#h-reports';m.appendChild(a);const k=$('lkey'),since=new Date(NOW-7*864e5);k.hidden=!rows.some(isNew);k.querySelector('span').lastChild.textContent=`added ${MON[since.getMonth()]} ${since.getDate()} to ${MON[NOW.getMonth()]} ${NOW.getDate()}`;}
+    const m=$('lmeta');m.replaceChildren();const a=H('a',null,`All ${state.rows.length} reports, with the map ↓`);a.href='#h-reports';m.appendChild(a);const k=$('lkey'),since=new Date(NOW-7*864e5);k.hidden=!rows.some(isNew);k.querySelector('span').lastChild.textContent=`published ${MON[since.getMonth()]} ${since.getDate()} to ${MON[NOW.getMonth()]} ${NOW.getDate()}`;}
   function answer(){const tr=state.trend;if(!tr)return;const cs=tr.series.map(s=>({s,c:ago(s)})).filter(o=>o.c.pct!=null);
     const down=cs.filter(o=>o.c.pct<-.03),flat=cs.filter(o=>Math.abs(o.c.pct)<=.03),up=cs.filter(o=>o.c.pct>.03);
     const names=a=>a.map(o=>o.s.name).join(', ').replace(/, ([^,]*)$/,' and $1');

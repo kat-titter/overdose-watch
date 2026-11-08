@@ -31,7 +31,7 @@ call 911 and give Narcan.
 Every Monday a scheduled job (Claude) refreshes the official counts and looks for new reports of deaths. It cites
 trusted primary sources only (medical examiners and coroners, health departments, the CDC, the White House drug
 policy office); news coverage can point to a report but is never the citation.
-Reports added in the past week get a yellow ring on the map. The job runs:
+Reports published in the past week get a yellow ring on the map. The job runs:
 
 ```bash
 python3 tools/update_trend.py          # refresh official counts (standard library only)
