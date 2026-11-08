@@ -21,17 +21,23 @@ def get(url, params):
         return json.load(r)
 
 
+# the CDC's drug-specific 12-month counts shown under each state's total; a death involving two drugs counts in both
+DRUGS = {"opioids": "Opioids (T40.0-T40.4,T40.6)", "fentanyl": "Synthetic opioids, excl. methadone (T40.4)",
+         "meth": "Psychostimulants with abuse potential (T43.6)", "cocaine": "Cocaine (T40.5)"}
+
+
 def state(code, name):
-    rows = get("https://data.cdc.gov/resource/xkb8-kh2a.json",
-               {"state": code, "indicator": "Number of Drug Overdose Deaths", "$limit": 5000})
-    pts = {}
-    for r in rows:
-        v = r.get("predicted_value") or r.get("data_value")  # predicted adjusts for deaths still being reported
-        if v:
-            pts[f"{r['year']}-{MONTHS[r['month']]:02d}"] = round(float(v))
+    def series(indicator):
+        rows = get("https://data.cdc.gov/resource/xkb8-kh2a.json", {"state": code, "indicator": indicator, "$limit": 5000})
+        pts = {}
+        for r in rows:
+            v = r.get("predicted_value") or r.get("data_value")  # predicted adjusts for deaths still being reported
+            if v:
+                pts[f"{r['year']}-{MONTHS[r['month']]:02d}"] = round(float(v))
+        return sorted((k, v) for k, v in pts.items() if k >= START)
     return {"key": code.lower(), "name": name, "level": "nation" if code == "US" else "state",
             "source": "CDC NCHS, provisional counts adjusted for reporting delay", "url": "https://data.cdc.gov/d/xkb8-kh2a",
-            "points": sorted((k, v) for k, v in pts.items() if k >= START)}
+            "points": series("Number of Drug Overdose Deaths"), "drugs": {k: series(ind) for k, ind in DRUGS.items()}}
 
 
 def county(fips, name):
