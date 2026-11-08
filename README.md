@@ -20,6 +20,11 @@ call 911 and give Narcan.
   (a death, a cluster or a data release), substances (the first sets the map colour; `all` for all-drug totals), exact
   molecules as reported, the death count the source states, a short summary, and the source link. Field rules live
   in `tools/schema.py`.
+- `data/compounds.json`: San Francisco deaths involving each newer drug the Medical Examiner tracks (xylazine,
+  bromazolam, fluorofentanyl, medetomidine ...), year to date at each monthly letter, 2024 onward. One record per
+  period a letter reports, with the letter's URL. Two letters repeat the previous month's total; those carry a `note`.
+- `data/molecules.json`: one drawn structure per compound in the page's table (`{key: {cid, svg}}`), from the PubChem
+  2D records in `mol/sdf/`, all at one bond length so the molecules compare honestly.
 
 ## Updating
 
@@ -30,9 +35,19 @@ Reports added in the past week get a yellow ring on the map. The job runs:
 
 ```bash
 python3 tools/update_trend.py          # refresh official counts (standard library only)
+python3 tools/update_compounds.py      # read the SF Medical Examiner's new monthly letters into compounds.json
 python3 tools/add_incidents.py new.json # validate and merge new reports; skips ones already tracked
 python3 tools/validate.py              # check everything before committing
 ```
+
+Web search never surfaces the Medical Examiner's letters, so `update_compounds.py` probes their fixed address
+(`https://media.api.sf.gov/documents/YYYY_MM_OCME_Overdose_Report.pdf`) for every month, reads each new PDF with
+macOS PDFKit (no Python packages) and caches it under `~/.cache/overdose-watch/`. The job also opens the agencies'
+own news pages before searching.
+
+Structures: drop a PubChem 2D SDF into `mol/sdf/<key>.sdf` and run `python3 tools/build_mols.py`, which draws every
+structure with `tools/mol2svg.py` (bonds in `currentColor`, so the page colours them) into `data/molecules.json`;
+the page's `COMPOUNDS` list in `index.html` gives each key its row.
 
 Corrections are welcome: open an issue with the report and a source.
 

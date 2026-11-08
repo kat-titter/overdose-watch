@@ -1,6 +1,33 @@
 {
- "updated": "2026-10-27",
+ "updated": "2026-11-08",
  "incidents": [
+  {
+   "id": "2026-10-sf-ocme-jan-sep",
+   "date": "2026-10-20",
+   "datePrec": "day",
+   "title": "SF: 399 overdose deaths through September; xylazine in 10, medetomidine in 3",
+   "place": "San Francisco",
+   "region": "Bay Area",
+   "geo": "city",
+   "lat": 37.76,
+   "lon": -122.41,
+   "kind": "data",
+   "subs": [
+    "all",
+    "fentanyl",
+    "xylazine",
+    "bromazolam",
+    "medetomidine",
+    "cychlorphine"
+   ],
+   "molecules": "xylazine, bromazolam, fluorofentanyl, medetomidine, phenazolam, ethyl bromazolam, N-propionitrile chlorphine (cychlorphine), desalkylgidazepam",
+   "deaths": 399,
+   "summary": "Preliminary count for January to September 2026. Among the newer drugs the Medical Examiner tracks, xylazine was in 10 deaths, bromazolam 5, fluorofentanyl 4, medetomidine 3 (1 a month earlier), phenazolam 2, cychlorphine 1.",
+   "source": "SF Office of the Chief Medical Examiner",
+   "url": "https://media.api.sf.gov/documents/2026_10_OCME_Overdose_Report.pdf",
+   "added": "2026-11-08",
+   "via": "weekly"
+  },
   {
    "id": "2026-09-sf-deaths-jan-aug",
    "date": "2026-09-15",
@@ -25,6 +52,75 @@
    "via": "seed"
   },
   {
+   "id": "2026-09-us-ondcp-fentanyl-analogues",
+   "date": "2026-09-15",
+   "datePrec": "day",
+   "title": "US: carfentanil, fluorofentanyl and methylfentanyl in 12,500 deaths since 2023",
+   "place": "United States",
+   "region": "US",
+   "geo": "nation",
+   "lat": 38.9,
+   "lon": -77.04,
+   "kind": "data",
+   "subs": [
+    "carfentanil",
+    "fentanyl"
+   ],
+   "molecules": "carfentanil, fluorofentanyl, methylfentanyl",
+   "deaths": 12500,
+   "summary": "White House drug threat notice. CDC estimates since 2023: fluorofentanyl in nearly 12,000 deaths, carfentanil nearly 600, methylfentanyl about 50. Carfentanil samples rose 206% since 2024; standard fentanyl urine screens miss it.",
+   "source": "White House ONDCP",
+   "url": "https://www.whitehouse.gov/wp-content/uploads/2026/09/Drug-Threat-fentanyl-analogues-1.pdf",
+   "added": "2026-11-08",
+   "via": "weekly"
+  },
+  {
+   "id": "2026-08-chicago-cychlorphine-6-deaths",
+   "date": "2026-08-27",
+   "datePrec": "day",
+   "title": "Chicago: cychlorphine in 6 deaths, January to June 2026",
+   "place": "Chicago",
+   "region": "US",
+   "geo": "city",
+   "lat": 41.88,
+   "lon": -87.63,
+   "kind": "cluster",
+   "subs": [
+    "cychlorphine",
+    "bromazolam"
+   ],
+   "molecules": "cychlorphine, bromazolam, etizolam, flubromazepam",
+   "deaths": 6,
+   "summary": "NDEWS sentinel-site report: cychlorphine was identified in 6 decedents by toxicology in the first half of 2026, found with benzodiazepines (bromazolam, etizolam, alprazolam, flubromazepam) and other drugs.",
+   "source": "NIDA NDEWS Sentinel Site Report, July 2026",
+   "url": "https://ndews.org/wordpress/files/2026/08/SSD-July-2026-08272026-pdf.pdf",
+   "added": "2026-11-08",
+   "via": "weekly"
+  },
+  {
+   "id": "2026-08-clark-county-2025-deaths",
+   "date": "2026-08-27",
+   "datePrec": "day",
+   "title": "Clark County: 714 overdose deaths in 2025, down 11%",
+   "place": "Clark County (Las Vegas)",
+   "region": "Nevada",
+   "geo": "county",
+   "lat": 36.17,
+   "lon": -115.14,
+   "kind": "data",
+   "subs": [
+    "all",
+    "fentanyl"
+   ],
+   "molecules": "",
+   "deaths": 714,
+   "summary": "Southern Nevada Health District's 2025 count. Opioids were in 69.6% of the deaths. The fentanyl-involved death rate rose from 2.4 per 100,000 in 2018 to 17.1 in 2025; deaths peaked in June to August.",
+   "source": "Southern Nevada Health District",
+   "url": "https://www.southernnevadahealthdistrict.org/news-release/10th-annual-southern-nevada-event-honors-lives-lost-to-overdose-and-promotes-prevention/",
+   "added": "2026-11-08",
+   "via": "weekly"
+  },
+  {
    "id": "2026-05-us-deaths-2025",
    "date": "2026-05-13",
    "datePrec": "day",
@@ -45,6 +141,30 @@
    "url": "https://www.cdc.gov/nchs/pressroom/releases/20260513.html",
    "added": "2026-10-15",
    "via": "seed"
+  },
+  {
+   "id": "2026-05-philadelphia-medetomidine-2024",
+   "date": "2026-05-11",
+   "datePrec": "day",
+   "title": "Philadelphia: medetomidine in 92 overdose deaths in 2024",
+   "place": "Philadelphia",
+   "region": "US",
+   "geo": "city",
+   "lat": 39.95,
+   "lon": -75.17,
+   "kind": "data",
+   "subs": [
+    "medetomidine",
+    "fentanyl",
+    "xylazine"
+   ],
+   "molecules": "medetomidine, xylazine",
+   "deaths": 92,
+   "summary": "The Medical Examiner began testing for medetomidine in May 2024 and found it in 9% of the year's 1,069 overdose deaths, every one with fentanyl. Xylazine was in 364 (34%).",
+   "source": "Philadelphia Department of Public Health",
+   "url": "https://www.phila.gov/2026-05-11-unintentional-drug-overdose-fatalities-in-philadelphia-in-2024/",
+   "added": "2026-11-08",
+   "via": "weekly"
   },
   {
    "id": "2026-national-cychlorphine-55",
@@ -199,9 +319,9 @@
    "subs": [
     "nitazenes"
    ],
-   "molecules": "nitazenes",
+   "molecules": "N-pyrrolidino protonitazene",
    "deaths": 2,
-   "summary": "One in 2024 and one in 2025; not seen in recent drug-checking samples, though hard to detect at low doses.",
+   "summary": "NDEWS's July 2026 report lists two San Diego deaths with N-pyrrolidino protonitazene, May 2025 and February 2026; the nitazene has not shown up in local drug-checking samples.",
    "source": "NDEWS",
    "url": "https://ndews.org/wordpress/files/2026/02/202601_NDEWS_SSD_Report_Overview_2_EP.pdf",
    "added": "2026-10-15",
