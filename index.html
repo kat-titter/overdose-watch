@@ -133,9 +133,10 @@ svg.mol{display:block;width:auto;height:auto;max-width:104px;max-height:72px;col
 .key th{font:500 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mute);text-align:left;vertical-align:bottom;padding:8px 16px 8px 0;border-bottom:1.5px solid var(--ink)}
 .key td{padding:10px 16px 10px 0;border-bottom:1px solid var(--rule);color:var(--ink)}
 .key .no{color:var(--red);font-weight:700} .key .yes{font-weight:700}
-.latest table{width:calc(100% - 42px);border-collapse:collapse;border-top:1.5px solid var(--ink)}
+.latest table{width:calc(100% - 34px);margin-left:13px;border-collapse:collapse;border-top:1.5px solid var(--ink)}   /* the first cell's 8 px pad keeps the text on the figures' left edge while a highlighted row paints past it */
 .latest td{padding:10px 16px 10px 0;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink)}
-.latest td:first-child{width:170px;font:500 14px/1.5 var(--mono);color:var(--mute)} .latest td:first-child b{display:block;font-weight:500;color:var(--ink)} .latest td:first-child .new{margin-top:4px}
+.latest tr[data-new]{background:var(--yelt)} .latest tr[data-new] td{border-bottom-color:var(--bg)}
+.latest td:first-child{width:178px;padding-left:8px;font:500 14px/1.5 var(--mono);color:var(--mute)} .latest td:first-child b{display:block;font-weight:500;color:var(--ink)}
 .latest td a{color:var(--ink);font-weight:600} .latest td span{display:block;margin-top:2px;font:500 12px var(--mono);color:var(--mute)}
 .latest td:last-child{text-align:right;white-space:nowrap;font:800 16px var(--display)}
 .give{margin:0;color:var(--ink)}
@@ -152,7 +153,7 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
   .key td{display:block;padding:0;border:0;min-width:0} .key td.heat{display:block;text-align:left;padding:0;min-width:0;background:none}
   .key .cname{grid-area:name} .key .narcan{grid-area:narcan} .key .strip{grid-area:strip} .key .y1{grid-area:y1} .key .y2{grid-area:y2} .key .y3{grid-area:y3} .key .last{grid-area:last}
   .key td[data-l]::before{content:attr(data-l);display:block;font:500 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-bottom:1px}
-  .tkey,.tgrid,.grid,.legend,.cfig,.keywrap,.latest table{margin-inline:0}.latest table{width:100%}.latest tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--rule)}.latest td{display:block;padding:0;border:0;min-width:0}.latest td:first-child{grid-column:1/-1;width:auto}.latest td:first-child b{display:inline;margin-right:8px}.latest td:first-child .new{margin:0 0 0 8px}.item{grid-template-columns:1fr;gap:8px}.item .src{text-align:left}.about{grid-template-columns:1fr}.showing{margin-left:0;width:100%;padding-bottom:0}}
+  .tkey,.tgrid,.grid,.legend,.cfig,.keywrap,.latest table{margin-inline:0}.latest table{width:100%;margin-left:0}.latest td:first-child{padding-left:0}.latest tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--rule)}.latest td{display:block;padding:0;border:0;min-width:0}.latest td:first-child{grid-column:1/-1;width:auto}.latest td:first-child b{display:inline;margin-right:8px}.latest tr[data-new]{padding-inline:8px;margin-inline:-8px}.item{grid-template-columns:1fr;gap:8px}.item .src{text-align:left}.about{grid-template-columns:1fr}.showing{margin-left:0;width:100%;padding-bottom:0}}
 @media (max-width:600px){.tgrid{grid-template-columns:1fr}.wrap{padding:20px 16px 56px}.sec{margin-top:56px}select{min-width:0}}
 @media (prefers-reduced-motion:no-preference){.item{transition:background-color .4s}}
 </style>
@@ -172,6 +173,7 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
   <section class="sec latest" aria-labelledby="h-latest">
     <div class="sechead"><h2 id="h-latest">Latest reports</h2><p class="meta" id="lmeta"></p></div>
     <table aria-label="The newest reports of overdose deaths, any place, newest first"><tbody id="latest"></tbody></table>
+    <p class="tkey" id="lkey" hidden><span><i class="dot" style="background:var(--yelt)"></i>added in the past week</span></p>
   </section>
 
   <section class="sec" aria-labelledby="h-trend">
@@ -631,10 +633,10 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
   }
   // the newest reports, any place: date and place, the title linking its source, the deaths
   function latest(){const tb=$('latest');tb.replaceChildren();const rows=state.rows.slice(0,5);
-    rows.forEach(r=>{const tr=H('tr'),d=H('td'),t=H('td'),a=H('a',null,r.title);d.append(H('b',null,fmtDate(r)),r.place);if(isNew(r))d.appendChild(H('span','new','New'));
+    rows.forEach(r=>{const tr=H('tr'),d=H('td'),t=H('td'),a=H('a',null,r.title);d.append(H('b',null,fmtDate(r)),r.place);if(isNew(r))tr.dataset.new='';
       a.href=r.url;a.target='_blank';a.rel='noopener';t.append(a,H('span',null,r.source));
       tr.append(d,t,H('td',null,r.deaths.toLocaleString('en-US')+(r.deaths===1?' death':' deaths')+(r.subs[0]==='all'?' in all':'')));tb.appendChild(tr);});
-    const m=$('lmeta');m.replaceChildren();const n=state.rows.filter(isNew).length,a=H('a',null,`${n?n+' added this week, ':''}all ${state.rows.length} reports with the map ↓`);a.href='#h-reports';m.appendChild(a);}
+    const m=$('lmeta');m.replaceChildren();const a=H('a',null,`All ${state.rows.length} reports, with the map ↓`);a.href='#h-reports';m.appendChild(a);const k=$('lkey'),since=new Date(NOW-7*864e5);k.hidden=!rows.some(isNew);k.querySelector('span').lastChild.textContent=`added ${MON[since.getMonth()]} ${since.getDate()} to ${MON[NOW.getMonth()]} ${NOW.getDate()}`;}
   function answer(){const tr=state.trend;if(!tr)return;const cs=tr.series.map(s=>({s,c:ago(s)})).filter(o=>o.c.pct!=null);
     const down=cs.filter(o=>o.c.pct<-.03),flat=cs.filter(o=>Math.abs(o.c.pct)<=.03),up=cs.filter(o=>o.c.pct>.03);
     const names=a=>a.map(o=>o.s.name).join(', ').replace(/, ([^,]*)$/,' and $1');
