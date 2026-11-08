@@ -226,6 +226,7 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
       <thead><tr><th>Compound</th><th>Narcan reverses it?</th><th>Fentanyl strip detects it?</th><th class="num" id="y1">SF deaths 2024</th><th class="num" id="y2">2025</th><th class="num" id="y3">2026</th><th>Latest report</th></tr></thead>
       <tbody id="keybody"></tbody>
     </table></div>
+    <p class="meta">* may need more than one dose</p>
     <p class="give"><b>Give Narcan to anyone who may be overdosing.</b> Benzos and sedatives usually come mixed with opioids, and Narcan reverses the opioid part. Why it fits one lock and not the others: <a href="https://kat-titter.github.io/three-minute-problem/#s7">The Three-Minute Problem, slides 7 to 12 ↗</a></p>
   </section>
 
@@ -249,9 +250,9 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
 (function(){
   const SUB={
     fentanyl:{label:'Fentanyl',cls:'fen',narcan:'yes',strip:'yes'},
-    carfentanil:{label:'Carfentanil',cls:'fen',narcan:'yes, often several doses',strip:'varies'},
-    cychlorphine:{label:'Cychlorphine',cls:'orph',narcan:'yes, may need more doses',strip:'no'},
-    nitazenes:{label:'Nitazenes',cls:'nit',narcan:'yes, may need more doses',strip:'no'},
+    carfentanil:{label:'Carfentanil',cls:'fen',narcan:'yes*',strip:'varies'},
+    cychlorphine:{label:'Cychlorphine',cls:'orph',narcan:'yes*',strip:'no'},
+    nitazenes:{label:'Nitazenes',cls:'nit',narcan:'yes*',strip:'no'},
     bromazolam:{label:'Bromazolam family',cls:'benzo',narcan:'no',strip:'no'},
     medetomidine:{label:'Medetomidine',cls:'sed',narcan:'no',strip:'no'},
     xylazine:{label:'Xylazine',cls:'sed',narcan:'no',strip:'no'},
