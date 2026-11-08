@@ -44,7 +44,7 @@ a{color:var(--red);text-underline-offset:2px}
 .mast{display:flex;justify-content:space-between;align-items:flex-start;gap:10px 32px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1.5px solid var(--ink)}
 h1{margin:0;font:800 clamp(40px,6.5vw,64px)/.98 var(--display);letter-spacing:-.035em;color:var(--ink)}
 h1 span{color:var(--red)}
-.dek{margin:12px 0 0;font-size:19px;color:var(--body)}
+.dek{margin:12px 0 0;font-size:19px;color:var(--body);text-wrap:balance}   /* one line at the full measure; balanced where it must wrap */
 .deck{margin:10px 0 0;font:500 14px var(--mono)}   /* mirrors the deck's own "Live tracker" line */
 .updated{margin:8px 0 0;font:500 14px var(--mono);color:var(--mute);white-space:nowrap}
 .alert{margin:18px 0 0;padding:2px 0 2px 12px;border-left:3px solid var(--red);font-size:16px;color:var(--ink)}
@@ -165,7 +165,7 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
   <header class="mast">
     <div>
       <h1>Overdose <span>Watch</span></h1>
-      <p class="dek">Overdose deaths and new drugs in the Bay Area, California and Nevada, from official counts and primary sources.</p>
+      <p class="dek">Overdose deaths and new drugs in the Bay Area, California and Nevada.</p>
       <p class="deck"><a href="https://kat-titter.github.io/three-minute-problem/">Why carry Narcan, in 22 slides: kat-titter.github.io/three-minute-problem ↗</a></p>
     </div>
     <p class="updated" id="updated">Loading…</p>
