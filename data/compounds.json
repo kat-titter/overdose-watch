@@ -1,0 +1,327 @@
+{
+ "generated": "2026-11-08",
+ "metric": "Accidental overdose deaths in San Francisco involving each newer drug the Medical Examiner tracks, year to date at each monthly report (preliminary; a drug's deaths can be revised down as cases close)",
+ "source": {
+  "name": "SF Office of the Chief Medical Examiner, monthly accidental overdose reports",
+  "urlPattern": "https://media.api.sf.gov/documents/{y}_{m:02d}_OCME_Overdose_Report.pdf",
+  "names": {
+   "fluoro fentanyl": "fluorofentanyl",
+   "xylazine": "xylazine",
+   "bromazolam": "bromazolam",
+   "phenazolam": "phenazolam",
+   "medetomidine": "medetomidine",
+   "desalkyl gidazepam": "desalkylgidazepam",
+   "ethyl bromazolam": "ethylbromazolam",
+   "n-propionitrile chlorphine": "cychlorphine",
+   "cychlorphine": "cychlorphine",
+   "carfentanil": "carfentanil",
+   "nitazene": "nitazenes",
+   "nitazenes": "nitazenes"
+  }
+ },
+ "reports": [
+  {
+   "date": "2025-01-17",
+   "from": "2024-01-01",
+   "to": "2024-12-31",
+   "total": 633,
+   "url": "https://media.api.sf.gov/documents/2025_01_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 83,
+    "xylazine": 61,
+    "bromazolam": 28
+   }
+  },
+  {
+   "date": "2025-02-19",
+   "from": "2024-01-01",
+   "to": "2024-12-31",
+   "total": 633,
+   "url": "https://media.api.sf.gov/documents/2025_02_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 83,
+    "xylazine": 62,
+    "bromazolam": 25
+   }
+  },
+  {
+   "date": "2025-02-19",
+   "from": "2025-01-01",
+   "to": "2025-01-31",
+   "total": 59,
+   "url": "https://media.api.sf.gov/documents/2025_02_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 8,
+    "xylazine": 1
+   }
+  },
+  {
+   "date": "2025-03-18",
+   "from": "2025-01-01",
+   "to": "2025-02-28",
+   "total": 118,
+   "url": "https://media.api.sf.gov/documents/2025_03_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 16,
+    "xylazine": 4,
+    "bromazolam": 5
+   }
+  },
+  {
+   "date": "2025-04-16",
+   "from": "2025-01-01",
+   "to": "2025-03-31",
+   "total": 118,
+   "url": "https://media.api.sf.gov/documents/2025_04_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 13,
+    "xylazine": 5,
+    "bromazolam": 6,
+    "desalkylgidazepam": 1
+   },
+   "note": "the letter's total repeats the 2025-03-18 letter's; the OCME's monthly open data (data.sf.gov jxrr-bmra) has the count"
+  },
+  {
+   "date": "2025-05-20",
+   "from": "2025-01-01",
+   "to": "2025-04-30",
+   "total": 245,
+   "url": "https://media.api.sf.gov/documents/2025_05_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 17,
+    "xylazine": 5,
+    "bromazolam": 7,
+    "desalkylgidazepam": 1
+   }
+  },
+  {
+   "date": "2025-06-20",
+   "from": "2025-01-01",
+   "to": "2025-05-31",
+   "total": 311,
+   "url": "https://media.api.sf.gov/documents/2025_06_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 25,
+    "xylazine": 7,
+    "bromazolam": 8,
+    "desalkylgidazepam": 1
+   }
+  },
+  {
+   "date": "2025-07-17",
+   "from": "2025-01-01",
+   "to": "2025-06-30",
+   "total": 358,
+   "url": "https://media.api.sf.gov/documents/2025_07_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 25,
+    "xylazine": 10,
+    "bromazolam": 8,
+    "desalkylgidazepam": 1
+   }
+  },
+  {
+   "date": "2025-08-19",
+   "from": "2025-01-01",
+   "to": "2025-07-31",
+   "total": 358,
+   "url": "https://media.api.sf.gov/documents/2025_08_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 30,
+    "xylazine": 12,
+    "bromazolam": 8,
+    "phenazolam": 6,
+    "medetomidine": 1,
+    "desalkylgidazepam": 1
+   },
+   "note": "the letter's total repeats the 2025-07-17 letter's; the OCME's monthly open data (data.sf.gov jxrr-bmra) has the count"
+  },
+  {
+   "date": "2025-09-16",
+   "from": "2025-01-01",
+   "to": "2025-08-31",
+   "total": 460,
+   "url": "https://media.api.sf.gov/documents/2025_09_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 30,
+    "xylazine": 15,
+    "bromazolam": 8,
+    "phenazolam": 5,
+    "medetomidine": 2,
+    "desalkylgidazepam": 1
+   }
+  },
+  {
+   "date": "2025-10-14",
+   "from": "2025-01-01",
+   "to": "2025-09-30",
+   "total": 497,
+   "url": "https://media.api.sf.gov/documents/2025_10_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 29,
+    "xylazine": 17,
+    "bromazolam": 9,
+    "phenazolam": 5,
+    "medetomidine": 3,
+    "desalkylgidazepam": 1
+   }
+  },
+  {
+   "date": "2025-11-17",
+   "from": "2025-01-01",
+   "to": "2025-10-31",
+   "total": 534,
+   "url": "https://media.api.sf.gov/documents/2025_11_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 35,
+    "xylazine": 22,
+    "bromazolam": 9,
+    "phenazolam": 5,
+    "medetomidine": 3,
+    "desalkylgidazepam": 1
+   }
+  },
+  {
+   "date": "2025-12-15",
+   "from": "2025-01-01",
+   "to": "2025-11-30",
+   "total": 588,
+   "url": "https://media.api.sf.gov/documents/2025_12_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 36,
+    "xylazine": 24,
+    "bromazolam": 11,
+    "phenazolam": 7,
+    "medetomidine": 5,
+    "desalkylgidazepam": 1,
+    "ethylbromazolam": 1
+   }
+  },
+  {
+   "date": "2026-01-16",
+   "from": "2025-01-01",
+   "to": "2025-12-31",
+   "total": 621,
+   "url": "https://media.api.sf.gov/documents/2026_01_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 38,
+    "xylazine": 27,
+    "bromazolam": 12,
+    "phenazolam": 6,
+    "medetomidine": 4,
+    "desalkylgidazepam": 1,
+    "ethylbromazolam": 1
+   }
+  },
+  {
+   "date": "2026-02-13",
+   "from": "2025-01-01",
+   "to": "2025-12-31",
+   "total": 624,
+   "url": "https://media.api.sf.gov/documents/2026_02_OCME_Overdose_Report.pdf",
+   "counts": {
+    "fluorofentanyl": 38,
+    "xylazine": 27,
+    "bromazolam": 11,
+    "phenazolam": 6,
+    "medetomidine": 4,
+    "desalkylgidazepam": 1,
+    "ethylbromazolam": 1
+   }
+  },
+  {
+   "date": "2026-04-24",
+   "from": "2026-01-01",
+   "to": "2026-03-31",
+   "total": 148,
+   "url": "https://media.api.sf.gov/documents/2026_04_OCME_Overdose_Report.pdf",
+   "counts": {
+    "xylazine": 4,
+    "bromazolam": 2,
+    "medetomidine": 2,
+    "fluorofentanyl": 1
+   }
+  },
+  {
+   "date": "2026-05-18",
+   "from": "2026-01-01",
+   "to": "2026-04-30",
+   "total": 184,
+   "url": "https://media.api.sf.gov/documents/2026_05_OCME_Overdose_Report.pdf",
+   "counts": {
+    "xylazine": 5,
+    "bromazolam": 2,
+    "fluorofentanyl": 1,
+    "medetomidine": 1,
+    "cychlorphine": 1,
+    "ethylbromazolam": 1
+   }
+  },
+  {
+   "date": "2026-06-16",
+   "from": "2026-01-01",
+   "to": "2026-05-31",
+   "total": 219,
+   "url": "https://media.api.sf.gov/documents/2026_06_OCME_Overdose_Report.pdf",
+   "counts": {
+    "xylazine": 5,
+    "ethylbromazolam": 2,
+    "bromazolam": 2,
+    "fluorofentanyl": 2,
+    "cychlorphine": 1,
+    "medetomidine": 1
+   }
+  },
+  {
+   "date": "2026-08-14",
+   "from": "2026-01-01",
+   "to": "2026-07-31",
+   "total": 296,
+   "url": "https://media.api.sf.gov/documents/2026_08_OCME_Overdose_Report.pdf",
+   "counts": {
+    "xylazine": 6,
+    "bromazolam": 4,
+    "fluorofentanyl": 4,
+    "ethylbromazolam": 2,
+    "phenazolam": 1,
+    "cychlorphine": 1,
+    "desalkylgidazepam": 1,
+    "medetomidine": 1
+   }
+  },
+  {
+   "date": "2026-09-15",
+   "from": "2026-01-01",
+   "to": "2026-08-31",
+   "total": 351,
+   "url": "https://media.api.sf.gov/documents/2026_09_OCME_Overdose_Report.pdf",
+   "counts": {
+    "xylazine": 6,
+    "bromazolam": 4,
+    "fluorofentanyl": 4,
+    "ethylbromazolam": 2,
+    "medetomidine": 1,
+    "desalkylgidazepam": 1,
+    "phenazolam": 1,
+    "cychlorphine": 1
+   }
+  },
+  {
+   "date": "2026-10-20",
+   "from": "2026-01-01",
+   "to": "2026-09-30",
+   "total": 399,
+   "url": "https://media.api.sf.gov/documents/2026_10_OCME_Overdose_Report.pdf",
+   "counts": {
+    "xylazine": 10,
+    "bromazolam": 5,
+    "fluorofentanyl": 4,
+    "medetomidine": 3,
+    "phenazolam": 2,
+    "ethylbromazolam": 2,
+    "cychlorphine": 1,
+    "desalkylgidazepam": 1
+   }
+  }
+ ]
+}
