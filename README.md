@@ -12,7 +12,8 @@ call 911 and give Narcan.
 
 ## Data
 
-- `data/trend.json`: drug overdose deaths in the 12 months ending each month.
+- `data/trend.json`: drug overdose deaths in the 12 months ending each month; for the US, California and Nevada also the
+  CDC's counts involving opioids, fentanyl (synthetic opioids), methamphetamine (psychostimulants) and cocaine, which overlap.
   - [CDC NCHS VSRR provisional counts](https://data.cdc.gov/d/xkb8-kh2a), states and US, monthly. Uses predicted values, which adjust for reporting delay.
   - [CDC NCHS provisional county-level counts](https://data.cdc.gov/d/gb4e-yj24), quarterly.
   - [San Francisco OCME preliminary monthly counts](https://data.sf.gov/d/jxrr-bmra), summed over 12 months.

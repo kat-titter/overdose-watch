@@ -20,7 +20,7 @@
 :root{
   --bg:#ffffff; --ink:#161214; --body:#3b3537; --mute:#625a5c; --rule:#e7e2e3; --rule2:#cbc3c5;
   --red:#c8102e; --yel:#d9b100; --yelt:#fff2a8;
-  --k-fen:#c8102e; --k-orph:#b37903; --k-nit:#4983e5; --k-benzo:#0f8f6c; --k-sed:#0e5e8a; --k-all:#8f8486;
+  --k-fen:#c8102e; --k-orph:#b37903; --k-nit:#4983e5; --k-benzo:#0f8f6c; --k-sed:#0e5e8a; --k-all:#8f8486; --k-stim:#0b8aa5;
   --land:#ece6e7; --landline:#c9bfc1;
   --display:'Schibsted Grotesk','Helvetica Neue',Arial,sans-serif; --text:'Public Sans','Helvetica Neue',Arial,sans-serif; --mono:'DM Mono',Menlo,Consolas,monospace;
   color-scheme:light;
@@ -28,12 +28,12 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#121011; --ink:#f6f1f1; --body:#d9d1d2; --mute:#a9a0a2; --rule:#2f282a; --rule2:#4a4144;
   --red:#ff5a6e; --yel:#f2cf3a; --yelt:#3b3420;
-  --k-fen:#ff5a6e; --k-orph:#eba002; --k-nit:#5682bb; --k-benzo:#31983d; --k-sed:#5bc1d9; --k-all:#a8a0a2;
+  --k-fen:#ff5a6e; --k-orph:#eba002; --k-nit:#5682bb; --k-benzo:#31983d; --k-sed:#5bc1d9; --k-all:#a8a0a2; --k-stim:#46c2dc;
   --land:#2a2224; --landline:#4b4042; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121011; --ink:#f6f1f1; --body:#d9d1d2; --mute:#a9a0a2; --rule:#2f282a; --rule2:#4a4144;
   --red:#ff5a6e; --yel:#f2cf3a; --yelt:#3b3420;
-  --k-fen:#ff5a6e; --k-orph:#eba002; --k-nit:#5682bb; --k-benzo:#31983d; --k-sed:#5bc1d9; --k-all:#a8a0a2;
+  --k-fen:#ff5a6e; --k-orph:#eba002; --k-nit:#5682bb; --k-benzo:#31983d; --k-sed:#5bc1d9; --k-all:#a8a0a2; --k-stim:#46c2dc;
   --land:#2a2224; --landline:#4b4042; color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -60,6 +60,8 @@ mark{background:var(--yelt);color:var(--ink);padding:0 .12em;border-radius:2px}
 .tkey{margin:0;display:flex;flex-wrap:wrap;gap:6px 22px;font:500 12px var(--mono);color:var(--body)}
 .tkey span,.legend span{display:inline-flex;align-items:center;gap:8px} .tkey b{font-weight:500;color:var(--ink);margin-right:4px} #compkey span{flex-wrap:wrap;row-gap:6px}
 .ring,.solid{width:10px;height:10px;border-radius:50%;display:block;flex:none}
+.line{width:18px;height:2px;display:block;flex:none;background:currentColor} .line.dash{height:0;background:none;border-top:2px dashed currentColor}
+.tgrid{position:relative} .tchart svg{touch-action:pan-y}
 .ring{border:1.5px solid var(--ink)} .solid{background:var(--ink)}
 .tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 36px;margin-top:6px}
 .tchart{min-width:0;display:flex;flex-direction:column;border-top:1px solid var(--rule2);padding-top:12px}
@@ -179,9 +181,10 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
   <section class="sec" aria-labelledby="h-trend">
     <h2 id="h-trend">Is it going down?</h2>
     <p class="lead" id="answer">Loading the official counts…</p>
-    <p class="intro">Each line counts drug overdose deaths in the 12 months up to that month, which smooths out seasons and one-off spikes. Recent months are provisional and can still rise.</p>
-    <p class="tkey"><span><i class="solid"></i>latest 12 months</span><span><i class="ring"></i>the 12 months a year earlier</span></p>
-    <div class="tgrid" id="tgrid"></div>
+    <p class="intro">Each chart counts drug overdose deaths in the 12 months up to that month, which smooths out seasons and one-off spikes. Opioids are the drugs that fit the brain’s mu receptor and slow breathing: heroin, fentanyl and its analogues, oxycodone, methadone, nitazenes. Narcan reverses only these. The CDC also counts the stimulants, methamphetamine and cocaine; a death involving two drugs counts under both. Recent months are provisional and can still rise.</p>
+    <p class="tkey"><span><i class="line" style="color:var(--ink)"></i>all drugs</span><span><i class="line" style="color:var(--k-fen)"></i>opioids</span><span><i class="line dash" style="color:var(--k-fen)"></i>of which fentanyl</span><span><i class="line" style="color:var(--k-stim)"></i>methamphetamine</span><span><i class="line dash" style="color:var(--k-stim)"></i>cocaine</span></p>
+    <p class="tkey"><span><i class="solid"></i>latest 12 months</span><span><i class="ring"></i>the 12 months a year earlier</span><span>Counties: all drugs only. Hover a chart for the month’s counts.</span></p>
+    <div class="tgrid" id="tgrid"><div class="pop" id="tcard" role="status" aria-live="polite" hidden></div></div>
   </section>
 
   <section class="sec" aria-labelledby="h-reports">
@@ -219,6 +222,7 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
     <div class="sechead"><h2 id="h-drugs">Which drugs, and does Narcan reverse them?</h2><p class="meta" id="cmeta"></p></div>
     <p class="lead" id="clead">Loading the compound counts…</p>
     <p class="intro" id="cintro"></p>
+    <p class="intro">The Medical Examiner counts a death as involving a drug when toxicology finds it at a level that contributed. An opioid overdose death is one where an opioid did; Narcan reverses the opioid part and none of the rest.</p>
     <figure class="fig cfig">
       <figcaption>Deaths involving each newer drug, year to date <span>San Francisco</span></figcaption>
       <svg id="comp" viewBox="0 0 640 320" role="img" aria-label="Stacked areas: San Francisco overdose deaths involving each newer drug, counted year to date at each monthly letter, one panel per year. Fluorofentanyl shrinks from 2024 to 2026 while xylazine and medetomidine grow."></svg>
@@ -608,17 +612,18 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
   const nice=v=>{const p=Math.pow(10,Math.floor(Math.log10(v))),m=v/p;return[1,1.2,1.5,2,2.5,3,4,5,6,8,10].find(n=>n>=m-1e-9)*p;};
   const fmtN=v=>v>=10000?Math.round(v/1000)+'k':Math.round(v).toLocaleString('en-US');
   const ago=s=>{const [k,v]=s.points.at(-1),y=Number(k.slice(0,4))-1,p=s.points.find(q=>q[0]===`${y}${k.slice(4)}`);return{k,v,k0:p&&p[0],v0:p&&p[1],pct:p?(v-p[1])/p[1]:null};};
+  const DRUGL=[['opioids','opioids','var(--k-fen)',null],['fentanyl','of which fentanyl','var(--k-fen)','4 3'],['meth','methamphetamine','var(--k-stim)',null],['cocaine','cocaine','var(--k-stim)','4 3']];
   function drawTrend(){const tr=state.trend;if(!tr)return;const grid=$('tgrid');
-    const dom={a:'2020-01',b:tr.series.map(s=>s.points.at(-1)[0]).sort().at(-1)};
-    if(!grid.childElementCount)tr.series.forEach(s=>{const c=ago(s),art=H('article','tchart');
+    const dom=state.tdom={a:'2020-01',b:tr.series.map(s=>s.points.at(-1)[0]).sort().at(-1)};
+    if(!grid.querySelector('.tchart'))tr.series.forEach(s=>{const c=ago(s),art=H('article','tchart');
       const flat=c.pct!=null&&Math.abs(c.pct)<=.03,pct=c.pct==null?'':`${c.pct<0?'−':'+'}${Math.abs(Math.round(c.pct*100))}%`;
       const ch=H('p','chg'+(c.pct>.03?' up':''),pct);ch.appendChild(H('span',null,c.pct==null?'no earlier count':flat?'about flat in a year':'in a year'));
       const now=H('p','now');now.append(H('b',null,c.v.toLocaleString('en-US')),` deaths in the 12 months to ${monthName(c.k)}`);
       const svg=E(art,'svg',{role:'img','aria-label':`${s.name}: ${c.v} overdose deaths in the 12 months to ${monthName(c.k)}${c.v0!=null?`, against ${c.v0} a year earlier`:''}.`});
       const cite=H('p','cite','Source: ');const a=H('a',null,(s.key==='sf'?'SF Medical Examiner':s.level==='county'?'CDC county counts':'CDC NCHS')+' ↗');
       a.href=s.url;a.target='_blank';a.rel='noopener';a.title=s.source;cite.appendChild(a);
-      art.replaceChildren(H('h3',null,s.name),ch,now,svg,cite);art.dataset.key=s.key;grid.appendChild(art);});
-    [...grid.children].forEach(art=>chart(art.querySelector('svg'),tr.series.find(s=>s.key===art.dataset.key),dom));}
+      art.replaceChildren(H('h3',null,s.name),ch,now,svg,cite);art.dataset.key=s.key;grid.appendChild(art);hover(svg,s,art);});
+    grid.querySelectorAll('.tchart').forEach(art=>chart(art.querySelector('svg'),tr.series.find(s=>s.key===art.dataset.key),dom));}
   function chart(svg,s,dom){
     const W=Math.max(220,Math.round(svg.getBoundingClientRect().width||320)),Ht=150,L=62,R=10,T=14,B=124,fs=12;
     const xi=k=>(Number(k.slice(0,4))-Number(dom.a.slice(0,4)))*12+Number(k.slice(5,7))-Number(dom.a.slice(5,7)),n=xi(dom.b);
@@ -631,6 +636,8 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
     E(svg,'path',{d:`${d}L${X(pts.at(-1)[0]).toFixed(1)} ${B}L${X(pts[0][0]).toFixed(1)} ${B}Z`,fill:'var(--land)'});
     E(svg,'path',{d:`M${L} ${B}H${W-R}`,stroke:'var(--ink)','stroke-width':1.5});
     E(svg,'path',{d,fill:'none',stroke:'var(--ink)','stroke-width':2,'stroke-linejoin':'round'});
+    DRUGL.forEach(([k,,col,dash])=>{const ps=((s.drugs||{})[k]||[]).filter(p=>p[0]>=dom.a);if(!ps.length)return;
+      E(svg,'path',{d:ps.map(([kk,v],i)=>(i?'L':'M')+X(kk).toFixed(1)+' '+Y(v).toFixed(1)).join(''),fill:'none',stroke:col,'stroke-width':1.5,'stroke-dasharray':dash,'stroke-linejoin':'round'});});
     const y0=Number(dom.a.slice(0,4)),y1=Number(dom.b.slice(0,4)),lw=4*fs*.6;let last=-1e9;
     for(let y=y0;y<=y1;y++){if(y>y0)E(svg,'path',{d:`M${X(`${y}-01`).toFixed(1)} ${B}v5`,stroke:'var(--ink)','stroke-width':1});
       const a=`${y}-01`<dom.a?dom.a:`${y}-01`,b=`${y}-12`>dom.b?dom.b:`${y}-12`,x=(X(a)+X(b))/2;
@@ -646,6 +653,21 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
       a.href=r.url;a.target='_blank';a.rel='noopener';t.append(a,H('span',null,r.source));
       tr.append(d,t,H('td',null,r.deaths.toLocaleString('en-US')+(r.deaths===1?' death':' deaths')+(r.subs[0]==='all'?' in all':'')));tb.appendChild(tr);});
     const m=$('lmeta');m.replaceChildren();const a=H('a',null,`All ${state.rows.length} reports, with the map ↓`);a.href='#h-reports';m.appendChild(a);const k=$('lkey'),since=new Date(NOW-7*864e5);k.hidden=!rows.some(isNew);k.querySelector('span').lastChild.textContent=`published ${MON[since.getMonth()]} ${since.getDate()} to ${MON[NOW.getMonth()]} ${NOW.getDate()}`;}
+  // hover (or tap) a chart: a dashed cursor at the month and a card with that month's counts, each line in its colour
+  function hover(svg,s,art){const card=$('tcard'),grid=$('tgrid');let cur=null;
+    const monthAt=e=>{const dom=state.tdom,r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal,x=(e.clientX-r.left)*vb.width/r.width,W=vb.width,L=62,R=10;
+      const n=(Number(dom.b.slice(0,4))-Number(dom.a.slice(0,4)))*12+Number(dom.b.slice(5,7))-Number(dom.a.slice(5,7));
+      const i=Math.round(Math.max(0,Math.min(n,(x-L)*n/(W-L-R)))),t=Number(dom.a.slice(0,4))*12+Number(dom.a.slice(5,7))-1+i;return `${Math.floor(t/12)}-${String(t%12+1).padStart(2,'0')}`;};
+    const show=e=>{const ym=monthAt(e),all=new Map(s.points).get(ym);if(all==null){hide();return;}
+      card.replaceChildren();const pd=H('div','pd');pd.append(s.name,document.createElement('br'),monthName(ym));card.appendChild(pd);
+      const row=(lab,v,col)=>{const d=H('div','pm');const b=H('b',null,v.toLocaleString('en-US'));b.style.color=col;d.append(b,' '+lab);card.appendChild(d);};
+      row('all drugs',all,'var(--ink)');DRUGL.forEach(([k,lab,col])=>{const v=new Map((s.drugs||{})[k]||[]).get(ym);if(v!=null)row(lab,v,col);});
+      card.hidden=false;const g=grid.getBoundingClientRect(),a=art.getBoundingClientRect(),r=svg.getBoundingClientRect(),pw=card.offsetWidth,ph=card.offsetHeight;
+      let left=e.clientX-g.left-pw/2;left=Math.max(0,Math.min(left,g.width-pw));let top=r.top-g.top-ph-8;if(top<0)top=r.bottom-g.top+8;card.style.left=left+'px';card.style.top=top+'px';
+      const vb=svg.viewBox.baseVal,x=((e.clientX-r.left)*vb.width/r.width).toFixed(1);if(!cur)cur=E(svg,'path',{stroke:'var(--mute)','stroke-width':1,'stroke-dasharray':'2 3','pointer-events':'none'});cur.setAttribute('d',`M${x} 14V124`);};
+    const hide=()=>{card.hidden=true;if(cur){cur.remove();cur=null;}};
+    svg.addEventListener('pointermove',show);svg.addEventListener('pointerdown',show);svg.addEventListener('pointerleave',hide);
+    document.addEventListener('pointerdown',e=>{if(!art.contains(e.target))hide();});}
   function answer(){const tr=state.trend;if(!tr)return;const cs=tr.series.map(s=>({s,c:ago(s)})).filter(o=>o.c.pct!=null);
     const down=cs.filter(o=>o.c.pct<-.03),flat=cs.filter(o=>Math.abs(o.c.pct)<=.03),up=cs.filter(o=>o.c.pct>.03);
     const names=a=>a.map(o=>o.s.name).join(', ').replace(/, ([^,]*)$/,' and $1');
