@@ -566,14 +566,14 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
     cychlorphine:'var(--k-orph)','n-desethyl-isotonitazene':'var(--k-nit)','n-pyrrolidino-protonitazene':'color-mix(in oklab,var(--k-nit) 55%,var(--bg))',
     bromazolam:'var(--k-benzo)',ethylbromazolam:'color-mix(in oklab,var(--k-benzo) 70%,var(--bg))',phenazolam:'color-mix(in oklab,var(--k-benzo) 48%,var(--bg))',desalkylgidazepam:'color-mix(in oklab,var(--k-benzo) 30%,var(--bg))',
     xylazine:'var(--k-sed)',medetomidine:'color-mix(in oklab,var(--k-sed) 55%,var(--bg))'};
-  function drawComp(){const comp=state.comp;if(!comp)return;const svg=$('comp'),W=Math.max(300,Math.round(svg.getBoundingClientRect().width||640)),Ht=W<500?260:320,L=40,wide=W>=700,R=wide?168:18,T=40,B=Ht-30,fs=12,ends=[];   // wide: room at the right for each band's name
+  function drawComp(){const comp=state.comp;if(!comp)return;const svg=$('comp'),W=Math.max(300,Math.round(svg.getBoundingClientRect().width||640)),Ht=W<500?260:320,L=56,wide=W>=700,R=wide?168:18,T=40,B=Ht-30,fs=12,ends=[];   // wide: room at the right for each band's name
     const recs=comp.reports.slice().sort((a,b)=>(a.to+a.date).localeCompare(b.to+b.date));
     const years=[...new Set(recs.map(r=>r.from.slice(0,4)))].sort().slice(-3);
     const byYear=years.map(y=>{const m=new Map();recs.filter(r=>r.from.startsWith(y)).forEach(r=>m.set(Number(r.to.slice(5,7)),r.counts));return{y,pts:[...m.entries()].sort((a,b)=>a[0]-b[0])};});
     const keys=COMPOUNDS.map(c=>c.key).filter(k=>recs.some(r=>r.counts[k]!=null)),tot=c=>Object.values(c).reduce((a,b)=>a+b,0);
     const top=nice(Math.max(1,...byYear.flatMap(o=>o.pts.map(p=>tot(p[1]))))),Y=v=>B-(B-T)*v/top;
     svg.setAttribute('viewBox',`0 0 ${W} ${Ht}`);svg.replaceChildren();
-    E(svg,'text',{x:2,y:12,'font-size':fs,fill:'var(--mute)'},'deaths');   // the y unit, once, above the axis
+    E(svg,'text',{x:12,y:((T+B)/2).toFixed(1),'font-size':fs,fill:'var(--mute)','text-anchor':'middle',transform:`rotate(-90 12 ${((T+B)/2).toFixed(1)})`},'deaths');   // the y unit as the standard rotated axis title
     [top/2,top].forEach(v=>E(svg,'path',{d:`M${L} ${Y(v).toFixed(1)}H${W-R}`,stroke:'var(--rule)','stroke-width':1}));
     [0,top/2,top].forEach(v=>E(svg,'text',{x:L-6,y:(Y(v)+fs*.35).toFixed(1),'text-anchor':'end','font-size':fs,fill:'var(--mute)'},fmtN(v)));
     // a year with only its year-end letter is one column; a year with monthly letters spans twelve months
@@ -620,11 +620,11 @@ select:focus-visible,a:focus-visible,button:focus-visible,circle:focus-visible,g
       art.replaceChildren(H('h3',null,s.name),ch,now,svg,cite);art.dataset.key=s.key;grid.appendChild(art);});
     [...grid.children].forEach(art=>chart(art.querySelector('svg'),tr.series.find(s=>s.key===art.dataset.key),dom));}
   function chart(svg,s,dom){
-    const W=Math.max(220,Math.round(svg.getBoundingClientRect().width||320)),Ht=150,L=46,R=10,T=26,B=124,fs=12;
+    const W=Math.max(220,Math.round(svg.getBoundingClientRect().width||320)),Ht=150,L=62,R=10,T=14,B=124,fs=12;
     const xi=k=>(Number(k.slice(0,4))-Number(dom.a.slice(0,4)))*12+Number(k.slice(5,7))-Number(dom.a.slice(5,7)),n=xi(dom.b);
     const X=k=>L+(W-L-R)*xi(k)/n,top=nice(Math.max(...s.points.map(p=>p[1]))),Y=v=>B-(B-T)*v/top;
     svg.setAttribute('viewBox',`0 0 ${W} ${Ht}`);svg.replaceChildren();
-    E(svg,'text',{x:L,y:12,'font-size':fs,fill:'var(--mute)'},'deaths');   // the y unit, once, above the axis
+    E(svg,'text',{x:12,y:((T+B)/2).toFixed(1),'font-size':fs,fill:'var(--mute)','text-anchor':'middle',transform:`rotate(-90 12 ${((T+B)/2).toFixed(1)})`},'deaths');   // the y unit as the standard rotated axis title
     [top/2,top].forEach(v=>E(svg,'path',{d:`M${L} ${Y(v).toFixed(1)}H${W-R}`,stroke:'var(--rule)','stroke-width':1}));
     [0,top/2,top].forEach(v=>E(svg,'text',{x:L-6,y:(Y(v)+fs*.35).toFixed(1),'text-anchor':'end','font-size':fs,fill:'var(--mute)'},fmtN(v)));
     const pts=s.points.filter(p=>p[0]>=dom.a),d=pts.map(([k,v],i)=>(i?'L':'M')+X(k).toFixed(1)+' '+Y(v).toFixed(1)).join('');
