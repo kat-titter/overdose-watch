@@ -50,6 +50,11 @@ Structures: drop a PubChem 2D SDF into `mol/sdf/<key>.sdf` and run `python3 tool
 structure with `tools/mol2svg.py` (bonds in `currentColor`, so the page colours them) into `data/molecules.json`;
 the page's `COMPOUNDS` list in `index.html` gives each key its row.
 
+The tab icon is `share/icon.svg` and the 1200×630 share card `share/card.html`, which copies the masthead and
+drug-class key. After changing any of them,
+`python3 tools/share.py` redraws `share/apple-touch-icon.png` and `share/card.png` (needs Google Chrome); `index.html`
+links them in its head.
+
 Corrections are welcome: open an issue with the report and a source.
 
 Made by Kat Titterton, San Francisco, as part of a harm-reduction project for Black Rock City and Bay Area dance floors.
