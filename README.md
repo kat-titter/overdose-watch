@@ -51,8 +51,8 @@ structure with `tools/mol2svg.py` (bonds in `currentColor`, so the page colours 
 the page's `COMPOUNDS` list in `index.html` gives each key its row.
 
 The tab icon is `share/icon.svg` and the 1200×630 share card `share/card.html`. After changing either,
-`python3 tools/share.py` stamps the icon and share tags into `index.html` and redraws `share/apple-touch-icon.png`
-and `share/card.png` (needs Google Chrome).
+`python3 tools/share.py` redraws `share/apple-touch-icon.png` and `share/card.png` (needs Google Chrome); `index.html`
+links them in its head.
 
 Corrections are welcome: open an issue with the report and a source.
 
