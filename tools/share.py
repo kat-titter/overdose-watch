@@ -16,12 +16,17 @@ FONT_WAIT_MS = 8000  # virtual time for the card's Google Fonts to load before t
 
 
 def screenshot(page, png_path, width_px, height_px):
-    """Draw one local HTML page to a PNG with headless Chrome; on failure, show Chrome's own error."""
+    """Draw one local HTML page to a fresh PNG with headless Chrome, or stop with Chrome's own error.
+
+    Chrome can exit 0 without writing a file, so the old PNG is removed first and the new one must exist after.
+    """
+    png_path.unlink(missing_ok=True)
     r = subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--hide-scrollbars", "--force-device-scale-factor=1",
                         f"--virtual-time-budget={FONT_WAIT_MS}", f"--window-size={width_px},{height_px}",
                         f"--screenshot={png_path}", page.as_uri()], capture_output=True, text=True)
-    if r.returncode:
-        sys.exit(f"Chrome failed on {page.name}:\n{r.stderr}")
+    if r.returncode or not png_path.exists():
+        sys.exit(f"Chrome drew no {png_path.name} from {page.name} (exit {r.returncode}):\n{r.stderr}")
+    print(f"{png_path.relative_to(ROOT)}: {png_path.stat().st_size / 1024:.0f} KB")
 
 
 def render():
@@ -32,8 +37,6 @@ def render():
                        f'<style>svg{{display:block;width:{TOUCH_PX}px;height:{TOUCH_PX}px}}</style>')
         screenshot(tmp, ROOT / "share/apple-touch-icon.png", TOUCH_PX, TOUCH_PX)
     screenshot(ROOT / "share/card.html", ROOT / "share/card.png", CARD_W, CARD_H)
-    for p in ("apple-touch-icon.png", "card.png"):
-        print(f"share/{p}: {(ROOT / 'share' / p).stat().st_size / 1024:.0f} KB")
 
 
 if __name__ == "__main__":
